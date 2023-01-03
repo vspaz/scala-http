@@ -12,4 +12,5 @@ libraryDependencies ++= scalaDependencies
 
 lazy val root = (project in file(".")).settings(
   name := "scala-http",
+  assembly / mainClass := Some("org.vspaz.Main"),
 )
