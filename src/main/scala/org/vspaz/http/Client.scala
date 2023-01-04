@@ -24,17 +24,27 @@ class Client(
       SttpBackendOptions.connectionTimeout(Duration(connectionTimeout, SECONDS))
     )
   );
-  def buildRequest(method: String, uri: String): RequestT[Identity, String, Any] = {
+  def buildRequest(
+    method: String,
+    uri: String,
+    headers: Option[Map[String, String]] = None
+  ): RequestT[Identity, String, Any] = {
     val url = host + uri
     val request = basicRequest
-      .headers(Map("User-Agent" -> userAgent))
       .readTimeout(responseTimeout)
       .method(Method(method.capitalize), uri = uri"$host$url")
       .response(asStringAlways)
     if (basicAuthUser != "" && basicUserPassword != "")
       request.auth.basic(basicAuthUser, basicUserPassword)
+    val allHeaders = headers.getOrElse(Map()) ++ Map("User-Agent" -> userAgent)
+    request.headers(allHeaders)
     request
   }
+
+  def doGet(uri: String, headers: Map[String, String]): Identity[Response[String]] = buildRequest(
+    "GET",
+    uri
+  ).send(http)
 
   override def toString: String =
     s"host: '$host', userAgent: '$userAgent', readTimeout: '$readTimeout', 'connectionTimeout: '$connectionTimeout'"
