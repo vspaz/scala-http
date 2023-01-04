@@ -1,6 +1,7 @@
 package org.vspaz.http
 
-import scala.concurrent.duration.{Duration, SECONDS};
+import scala.concurrent.duration.{Duration, SECONDS}
+import sttp.client3._
 
 class Client(
     host: String = "",
@@ -12,10 +13,17 @@ class Client(
     delay: Int = 2,
     readTimeout: Int = 10,
     connectionTimeout: Int = 10,
-    logger: Option[ILogger]
+    logger: Option[ILogger] = None,
+    backend: Option[SttpBackend[Identity, Any]] = None
 ) {
   private val responseTimeout = Duration(readTimeout, SECONDS);
-  private val connTimeout = Duration(connectionTimeout, SECONDS);
+  private val http = backend.getOrElse(
+    HttpClientSyncBackend(
+      options = SttpBackendOptions.connectionTimeout(
+        Duration(connectionTimeout, SECONDS)
+      )
+    )
+  );
 
   override def toString: String = {
     s"host: '$host', userAgent: '$userAgent', readTimeout: '$readTimeout', 'connectionTimeout: '$connectionTimeout'"
