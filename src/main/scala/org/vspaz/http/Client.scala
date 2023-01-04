@@ -11,7 +11,8 @@ class Client(
     retryOnErrors: Set[Int] = Set(),
     delay: Int = 2,
     readTimeout: Int = 10,
-    connectionTimeout: Int = 10
+    connectionTimeout: Int = 10,
+    logger: ILogger = null
 ) {
   private val responseTimeout = Duration(readTimeout, SECONDS);
   private val connTimeout = Duration(connectionTimeout, SECONDS);
