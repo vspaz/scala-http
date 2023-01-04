@@ -12,7 +12,7 @@ class Client(
     delay: Int = 2,
     readTimeout: Int = 10,
     connectionTimeout: Int = 10,
-    logger: ILogger = null
+    logger: Option[ILogger]
 ) {
   private val responseTimeout = Duration(readTimeout, SECONDS);
   private val connTimeout = Duration(connectionTimeout, SECONDS);
