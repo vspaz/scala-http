@@ -2,7 +2,6 @@ package org.vspaz.http
 
 import scala.concurrent.duration.{Duration, SECONDS};
 
-
 class Client(
     host: String = "",
     userAgent: String = "",
@@ -16,4 +15,14 @@ class Client(
 ) {
   private val responseTimeout = Duration(readTimeout, SECONDS);
   private val connTimeout = Duration(connectionTimeout, SECONDS);
+
+  override def toString: String = {
+    String.format(
+      "host: '%s', userAgent: '%s', readTimeout: '%s', 'connectionTimeout: '%s'",
+      host,
+      userAgent,
+      readTimeout,
+      connectionTimeout
+    )
+  }
 }
