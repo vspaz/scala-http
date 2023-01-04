@@ -17,12 +17,6 @@ class Client(
   private val connTimeout = Duration(connectionTimeout, SECONDS);
 
   override def toString: String = {
-    String.format(
-      "host: '%s', userAgent: '%s', readTimeout: '%s', 'connectionTimeout: '%s'",
-      host,
-      userAgent,
-      readTimeout,
-      connectionTimeout
-    )
+    s"host: '$host', userAgent: '$userAgent', readTimeout: '$readTimeout', 'connectionTimeout: '$connectionTimeout'"
   }
 }
