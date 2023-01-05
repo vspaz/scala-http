@@ -29,14 +29,14 @@ class Client(
     url: String,
     headers: Option[Map[String, String]] = None
   ): RequestT[Identity, String, Any] = {
+    val allHeaders = headers.getOrElse(Map()) ++ Map("User-Agent" -> userAgent)
     val request = basicRequest
+      .headers(allHeaders)
       .readTimeout(responseTimeout)
       .method(method, uri = uri"${host + url}")
       .response(asStringAlways)
     if (basicAuthUser != "" && basicUserPassword != "")
       request.auth.basic(basicAuthUser, basicUserPassword)
-    val allHeaders = headers.getOrElse(Map()) ++ Map("User-Agent" -> userAgent)
-    request.headers(allHeaders)
     request
   }
 

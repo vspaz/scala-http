@@ -4,7 +4,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import sttp.client3.{Identity, Response}
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
-import sttp.model.{Method, StatusCode}
+import sttp.model.{MediaType, Method, StatusCode}
 
 trait Setup {
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
@@ -12,6 +12,7 @@ trait Setup {
     .whenRequestMatchesPartial {
       case request if (request.method.equals(Method.GET)) =>
         assert(request.uri.path.endsWith(List("test-get")))
+        assert(request.headers().headers("User-Agent").head == "test-client")
         Response("Ok", StatusCode.Ok)
       case request if (request.method.equals(Method.DELETE)) =>
         assert(request.uri.path.endsWith(List("test-delete")))
