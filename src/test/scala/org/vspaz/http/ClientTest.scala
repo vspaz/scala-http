@@ -35,10 +35,17 @@ class ClientTest extends AnyFunSuite with Setup {
         .toString
     );
   }
-  test("Client.doGet") {
+  test("Client.doGetOk") {
     val testHttpBackend = getTestHttpBackendStub
     val client =
       new Client("http://mock.api", userAgent = "test-client", backend = Option(testHttpBackend))
     client.doGet("/test-get")
+  }
+
+  test("Client.doDeleteOk") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client("http://mock.api", userAgent = "test-client", backend = Option(testHttpBackend))
+    client.doDelete("/test-delete")
   }
 }
