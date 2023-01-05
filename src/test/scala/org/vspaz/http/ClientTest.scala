@@ -1,7 +1,7 @@
 package org.vspaz.http
 
 import org.scalatest.funsuite.AnyFunSuite
-import sttp.client3.{Identity, Response}
+import sttp.client3.{Identity, Response, StringBody}
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
 import sttp.model.{MediaType, Method, StatusCode}
@@ -20,7 +20,11 @@ trait Setup {
         Response("accepted", StatusCode.Accepted)
       case request if (request.method.equals((Method.POST))) =>
         assert(request.uri.path.endsWith(List("test-post")))
-        assert(request.headers().headers("User-Agent").head == "test-client")
+        assert(request.headers().headers("User-Agent").head == "test-post-client")
+        assert(
+          request.headers().headers("Content-Type").head == MediaType.ApplicationJson.toString()
+        )
+        assert(request.body == StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
         Response("accepted", StatusCode.Accepted)
       case request if (request.method.equals((Method.PATCH))) =>
         assert(request.uri.path.endsWith(List("test-patch")))
@@ -60,5 +64,20 @@ class ClientTest extends AnyFunSuite with Setup {
         backend = Option(testHttpBackend)
       )
     client.doDelete("/test-delete")
+  }
+
+  test("Client.doPostOk") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        "http://mock.api",
+        userAgent = "test-post-client",
+        backend = Option(testHttpBackend)
+      )
+    client.doPost(
+      "/test-post",
+      headers = Option(Map("Content-Type" -> MediaType.ApplicationJson.toString())),
+      payload = """{"test": "json"}"""
+    )
   }
 }

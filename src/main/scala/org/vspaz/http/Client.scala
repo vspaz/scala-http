@@ -50,7 +50,7 @@ class Client(
     headers: Option[Map[String, String]] = None,
     payload: String = ""
   ): Identity[Response[String]] = buildRequest(
-    method = Method.GET,
+    method = Method.POST,
     url = uri,
     headers = headers,
     payload = payload
