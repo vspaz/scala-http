@@ -16,6 +16,15 @@ trait Setup {
       case request if (request.method.equals(Method.DELETE)) =>
         assert(request.uri.path.endsWith(List("test-delete")))
         Response("accepted", StatusCode.Accepted)
+      case request if (request.method.equals((Method.POST))) =>
+        assert(request.uri.path.endsWith(List("test-post")))
+        Response("accepted", StatusCode.Accepted)
+      case request if (request.method.equals((Method.PATCH))) =>
+        assert(request.uri.path.endsWith(List("test-patch")))
+        Response("accepted", StatusCode.Accepted)
+      case request if (request.method.equals((Method.PUT))) =>
+        assert(request.uri.path.endsWith(List("test-put")))
+        Response("accepted", StatusCode.Accepted)
     }
 }
 
