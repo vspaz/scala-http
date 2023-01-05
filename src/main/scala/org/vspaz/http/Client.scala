@@ -25,14 +25,13 @@ class Client(
     )
   );
   def buildRequest(
-    method: String,
-    uri: String,
+    method: Method,
+    url: String,
     headers: Option[Map[String, String]] = None
   ): RequestT[Identity, String, Any] = {
-    val url = host + uri
     val request = basicRequest
       .readTimeout(responseTimeout)
-      .method(Method(method.capitalize), uri = uri"$host$url")
+      .method(method, uri = uri"${host + url}")
       .response(asStringAlways)
     if (basicAuthUser != "" && basicUserPassword != "")
       request.auth.basic(basicAuthUser, basicUserPassword)
@@ -41,10 +40,8 @@ class Client(
     request
   }
 
-  def doGet(uri: String, headers: Map[String, String]): Identity[Response[String]] = buildRequest(
-    "GET",
-    uri
-  ).send(http)
+  def doGet(uri: String, headers: Option[Map[String, String]] = None): Identity[Response[String]] =
+    buildRequest(Method.GET, uri, headers).send(http)
 
   override def toString: String =
     s"host: '$host', userAgent: '$userAgent', readTimeout: '$readTimeout', 'connectionTimeout: '$connectionTimeout'"
