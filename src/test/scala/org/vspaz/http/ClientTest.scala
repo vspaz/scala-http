@@ -12,19 +12,23 @@ trait Setup {
     .whenRequestMatchesPartial {
       case request if (request.method.equals(Method.GET)) =>
         assert(request.uri.path.endsWith(List("test-get")))
-        assert(request.headers().headers("User-Agent").head == "test-client")
+        assert(request.headers().headers("User-Agent").head == "test-get-client")
         Response("Ok", StatusCode.Ok)
       case request if (request.method.equals(Method.DELETE)) =>
         assert(request.uri.path.endsWith(List("test-delete")))
+        assert(request.headers().headers("User-Agent").head == "test-delete-client")
         Response("accepted", StatusCode.Accepted)
       case request if (request.method.equals((Method.POST))) =>
         assert(request.uri.path.endsWith(List("test-post")))
+        assert(request.headers().headers("User-Agent").head == "test-client")
         Response("accepted", StatusCode.Accepted)
       case request if (request.method.equals((Method.PATCH))) =>
         assert(request.uri.path.endsWith(List("test-patch")))
+        assert(request.headers().headers("User-Agent").head == "test-client")
         Response("accepted", StatusCode.Accepted)
       case request if (request.method.equals((Method.PUT))) =>
         assert(request.uri.path.endsWith(List("test-put")))
+        assert(request.headers().headers("User-Agent").head == "test-client")
         Response("accepted", StatusCode.Accepted)
     }
 }
@@ -39,14 +43,22 @@ class ClientTest extends AnyFunSuite with Setup {
   test("Client.doGetOk") {
     val testHttpBackend = getTestHttpBackendStub
     val client =
-      new Client("http://mock.api", userAgent = "test-client", backend = Option(testHttpBackend))
+      new Client(
+        "http://mock.api",
+        userAgent = "test-get-client",
+        backend = Option(testHttpBackend)
+      )
     client.doGet("/test-get")
   }
 
   test("Client.doDeleteOk") {
     val testHttpBackend = getTestHttpBackendStub
     val client =
-      new Client("http://mock.api", userAgent = "test-client", backend = Option(testHttpBackend))
+      new Client(
+        "http://mock.api",
+        userAgent = "test-delete-client",
+        backend = Option(testHttpBackend)
+      )
     client.doDelete("/test-delete")
   }
 }
