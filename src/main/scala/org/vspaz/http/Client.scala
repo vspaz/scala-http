@@ -27,13 +27,15 @@ class Client(
   def buildRequest(
     method: Method,
     url: String,
-    headers: Option[Map[String, String]] = None
+    headers: Option[Map[String, String]] = None,
+    payload: String = ""
   ): RequestT[Identity, String, Any] = {
     val allHeaders = headers.getOrElse(Map()) ++ Map("User-Agent" -> userAgent)
     val request = basicRequest
       .headers(allHeaders)
       .readTimeout(responseTimeout)
       .method(method, uri = uri"${host + url}")
+      .body(payload)
       .response(asStringAlways)
     if (basicAuthUser != "" && basicUserPassword != "")
       request.auth.basic(basicAuthUser, basicUserPassword)
@@ -42,6 +44,17 @@ class Client(
 
   def doGet(uri: String, headers: Option[Map[String, String]] = None): Identity[Response[String]] =
     buildRequest(Method.GET, uri, headers).send(http)
+
+  def doPost(
+    uri: String,
+    headers: Option[Map[String, String]] = None,
+    payload: String = ""
+  ): Identity[Response[String]] = buildRequest(
+    method = Method.GET,
+    url = uri,
+    headers = headers,
+    payload = payload
+  ).send(http)
 
   def doDelete(
     uri: String,
