@@ -61,6 +61,17 @@ class Client(
     payload = payload
   ).send(http)
 
+  def doPatch(
+    endpoint: String,
+    headers: Option[Map[String, String]] = None,
+    payload: String = ""
+  ): Identity[Response[String]] = buildRequest(
+    method = Method.PATCH,
+    endpoint = endpoint,
+    headers = headers,
+    payload = payload
+  ).send(http)
+
   def doDelete(
     endpoint: String,
     headers: Option[Map[String, String]] = None
