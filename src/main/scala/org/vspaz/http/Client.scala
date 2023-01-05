@@ -18,13 +18,13 @@ class Client(
   logger: Option[ILogger] = None,
   backend: Option[SttpBackend[Identity, Any]] = None
 ) {
-  private val responseTimeout = Duration(readTimeout, SECONDS);
+  private val responseTimeout = Duration(readTimeout, SECONDS)
   private val http = backend.getOrElse(
     HttpClientSyncBackend(options =
       SttpBackendOptions.connectionTimeout(Duration(connectionTimeout, SECONDS))
     )
-  );
-  def buildRequest(
+  )
+  private def buildRequest(
     method: Method,
     url: String,
     headers: Option[Map[String, String]] = None,
