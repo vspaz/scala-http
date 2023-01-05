@@ -43,6 +43,11 @@ class Client(
   def doGet(uri: String, headers: Option[Map[String, String]] = None): Identity[Response[String]] =
     buildRequest(Method.GET, uri, headers).send(http)
 
+  def doDelete(
+    uri: String,
+    headers: Option[Map[String, String]] = None
+  ): Identity[Response[String]] = buildRequest(Method.DELETE, uri, headers).send(http)
+
   override def toString: String =
     s"host: '$host', userAgent: '$userAgent', readTimeout: '$readTimeout', 'connectionTimeout: '$connectionTimeout'"
 }
