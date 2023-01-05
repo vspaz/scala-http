@@ -11,7 +11,10 @@ trait Setup {
     .synchronous
     .whenRequestMatchesPartial {
       case request if (request.method.equals(Method.GET)) =>
-        assert(request.uri.path.endsWith(List("endpoint")))
+        assert(request.uri.path.endsWith(List("test-get")))
+        Response("Ok", StatusCode.Ok)
+      case request if (request.method.equals(Method.DELETE)) =>
+        assert(request.uri.path.endsWith(List("test-delete")))
         Response("accepted", StatusCode.Accepted)
     }
 }
@@ -26,7 +29,7 @@ class ClientTest extends AnyFunSuite with Setup {
   test("Client.doGet") {
     val testHttpBackend = getTestHttpBackendStub
     val client =
-      new Client("http://mock.api", userAgent = "test", backend = Option(testHttpBackend))
-    client.doGet("/endpoint")
+      new Client("http://mock.api", userAgent = "test-client", backend = Option(testHttpBackend))
+    client.doGet("/test-get")
   }
 }
