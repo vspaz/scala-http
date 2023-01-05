@@ -52,7 +52,7 @@ class ClientTest extends AnyFunSuite with Setup {
         userAgent = "test-get-client",
         backend = Option(testHttpBackend)
       )
-    client.doGet("/test-get")
+    client.doGet(endpoint = "/test-get")
   }
 
   test("Client.doDeleteOk") {
@@ -63,7 +63,7 @@ class ClientTest extends AnyFunSuite with Setup {
         userAgent = "test-delete-client",
         backend = Option(testHttpBackend)
       )
-    client.doDelete("/test-delete")
+    client.doDelete(endpoint = "/test-delete")
   }
 
   test("Client.doPostOk") {
@@ -75,7 +75,7 @@ class ClientTest extends AnyFunSuite with Setup {
         backend = Option(testHttpBackend)
       )
     client.doPost(
-      uri = "/test-post",
+      endpoint = "/test-post",
       headers = Option(Map("Content-Type" -> MediaType.ApplicationJson.toString())),
       payload = """{"test": "json"}"""
     )

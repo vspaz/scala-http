@@ -26,15 +26,14 @@ class Client(
   )
   private def buildRequest(
     method: Method,
-    url: String,
+    endpoint: String,
     headers: Option[Map[String, String]] = None,
     payload: String = ""
   ): RequestT[Identity, String, Any] = {
-    val allHeaders = headers.getOrElse(Map()) ++ Map("User-Agent" -> userAgent)
     val request = basicRequest
-      .headers(allHeaders)
+      .headers(headers.getOrElse(Map()) ++ Map("User-Agent" -> userAgent))
       .readTimeout(responseTimeout)
-      .method(method, uri = uri"${host + url}")
+      .method(method, uri = uri"${host + endpoint}")
       .body(payload)
       .response(asStringAlways)
     if (basicAuthUser != "" && basicUserPassword != "")
@@ -42,24 +41,34 @@ class Client(
     request
   }
 
-  def doGet(uri: String, headers: Option[Map[String, String]] = None): Identity[Response[String]] =
-    buildRequest(Method.GET, uri, headers).send(http)
+  def doGet(
+    endpoint: String,
+    headers: Option[Map[String, String]] = None
+  ): Identity[Response[String]] = buildRequest(
+    method = Method.GET,
+    endpoint = endpoint,
+    headers = headers
+  ).send(http)
 
   def doPost(
-    uri: String,
+    endpoint: String,
     headers: Option[Map[String, String]] = None,
     payload: String = ""
   ): Identity[Response[String]] = buildRequest(
     method = Method.POST,
-    url = uri,
+    endpoint = endpoint,
     headers = headers,
     payload = payload
   ).send(http)
 
   def doDelete(
-    uri: String,
+    endpoint: String,
     headers: Option[Map[String, String]] = None
-  ): Identity[Response[String]] = buildRequest(Method.DELETE, uri, headers).send(http)
+  ): Identity[Response[String]] = buildRequest(
+    method = Method.DELETE,
+    endpoint = endpoint,
+    headers = headers
+  ).send(http)
 
   override def toString: String =
     s"host: '$host', userAgent: '$userAgent', readTimeout: '$readTimeout', 'connectionTimeout: '$connectionTimeout'"
