@@ -10,15 +10,15 @@ trait Setup {
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
     .synchronous
     .whenRequestMatchesPartial {
-      case request if (request.method.equals(Method.GET)) =>
+      case request if request.method.equals(Method.GET) =>
         assert(request.uri.path.endsWith(List("test-get")))
         assert(request.headers().headers("User-Agent").head == "test-get-client")
         Response("Ok", StatusCode.Ok)
-      case request if (request.method.equals(Method.DELETE)) =>
+      case request if request.method.equals(Method.DELETE) =>
         assert(request.uri.path.endsWith(List("test-delete")))
         assert(request.headers().headers("User-Agent").head == "test-delete-client")
         Response("accepted", StatusCode.Accepted)
-      case request if (request.method.equals((Method.POST))) =>
+      case request if request.method.equals(Method.POST) =>
         assert(request.uri.path.endsWith(List("test-post")))
         assert(request.headers().headers("User-Agent").head == "test-post-client")
         assert(
@@ -26,11 +26,11 @@ trait Setup {
         )
         assert(request.body == StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
         Response("accepted", StatusCode.Accepted)
-      case request if (request.method.equals((Method.PATCH))) =>
+      case request if request.method.equals(Method.PATCH) =>
         assert(request.uri.path.endsWith(List("test-patch")))
         assert(request.headers().headers("User-Agent").head == "test-client")
         Response("accepted", StatusCode.Accepted)
-      case request if (request.method.equals((Method.PUT))) =>
+      case request if request.method.equals(Method.PUT) =>
         assert(request.uri.path.endsWith(List("test-put")))
         assert(request.headers().headers("User-Agent").head == "test-client")
         Response("accepted", StatusCode.Accepted)
@@ -42,13 +42,13 @@ class ClientTest extends AnyFunSuite with Setup {
     assert(
       "host: '', userAgent: '', readTimeout: '10', 'connectionTimeout: '10'" == new Client()
         .toString
-    );
+    )
   }
   test("Client.doGetOk") {
     val testHttpBackend = getTestHttpBackendStub
     val client =
       new Client(
-        "http://mock.api",
+        host = "http://mock.api",
         userAgent = "test-get-client",
         backend = Option(testHttpBackend)
       )
@@ -59,7 +59,7 @@ class ClientTest extends AnyFunSuite with Setup {
     val testHttpBackend = getTestHttpBackendStub
     val client =
       new Client(
-        "http://mock.api",
+        host = "http://mock.api",
         userAgent = "test-delete-client",
         backend = Option(testHttpBackend)
       )
@@ -70,12 +70,12 @@ class ClientTest extends AnyFunSuite with Setup {
     val testHttpBackend = getTestHttpBackendStub
     val client =
       new Client(
-        "http://mock.api",
+        host = "http://mock.api",
         userAgent = "test-post-client",
         backend = Option(testHttpBackend)
       )
     client.doPost(
-      "/test-post",
+      uri = "/test-post",
       headers = Option(Map("Content-Type" -> MediaType.ApplicationJson.toString())),
       payload = """{"test": "json"}"""
     )
