@@ -107,7 +107,7 @@ class Client(
   )
 
   def doDelete(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
-    doRequest(method = Method.DELETE, endpoint = endpoint, headers = headers).send(http)
+    doRequest(method = Method.DELETE, endpoint = endpoint, headers = headers)
 
   private def timeIt[T](expression: => T): T = {
     val start = currentTimeMillis()
