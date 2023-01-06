@@ -29,11 +29,11 @@ class Client(
   private def buildRequest(
     method: Method,
     endpoint: String,
-    headers: Option[Map[String, String]] = None,
+    headers: Map[String, String] = Map(),
     payload: String = ""
   ): RequestT[Identity, String, Any] = {
     val request = basicRequest
-      .headers(headers.getOrElse(Map()) ++ Map("User-Agent" -> userAgent))
+      .headers(headers ++ Map("User-Agent" -> userAgent))
       .readTimeout(responseTimeout)
       .method(method, uri = uri"${host + endpoint}")
       .body(payload)
@@ -46,25 +46,19 @@ class Client(
   private def doRequest(
     method: Method = Method.GET,
     endpoint: String,
-    headers: Option[Map[String, String]] = None,
-    payload: Option[String] = None
+    headers: Map[String, String],
+    payload: String = ""
   ): RequestT[Identity, String, Any] = timeIt(
-    buildRequest(method = method, endpoint = endpoint, headers = headers, payload.getOrElse(""))
+    buildRequest(method = method, endpoint = endpoint, headers = headers, payload = payload)
   )
 
-  def doGet(
-    endpoint: String,
-    headers: Option[Map[String, String]] = None
-  ): Identity[Response[String]] = doRequest(
-    method = Method.GET,
-    endpoint = endpoint,
-    headers = headers
-  ).send(http)
+  def doGet(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
+    doRequest(method = Method.GET, endpoint = endpoint, headers = headers).send(http)
 
   def doPost(
     endpoint: String,
-    headers: Option[Map[String, String]] = None,
-    payload: Option[String] = None
+    headers: Map[String, String] = Map(),
+    payload: String = ""
   ): Identity[Response[String]] = doRequest(
     method = Method.POST,
     endpoint = endpoint,
@@ -74,8 +68,8 @@ class Client(
 
   def doPatch(
     endpoint: String,
-    headers: Option[Map[String, String]] = None,
-    payload: Option[String] = None
+    headers: Map[String, String] = Map(),
+    payload: String = ""
   ): Identity[Response[String]] = doRequest(
     method = Method.PATCH,
     endpoint = endpoint,
@@ -85,8 +79,8 @@ class Client(
 
   def doPut(
     endpoint: String,
-    headers: Option[Map[String, String]] = None,
-    payload: Option[String] = None
+    headers: Map[String, String] = Map(),
+    payload: String = ""
   ): Identity[Response[String]] = doRequest(
     method = Method.PUT,
     endpoint = endpoint,
@@ -94,14 +88,8 @@ class Client(
     payload = payload
   ).send(http)
 
-  def doDelete(
-    endpoint: String,
-    headers: Option[Map[String, String]] = None
-  ): Identity[Response[String]] = doRequest(
-    method = Method.DELETE,
-    endpoint = endpoint,
-    headers = headers
-  ).send(http)
+  def doDelete(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
+    doRequest(method = Method.DELETE, endpoint = endpoint, headers = headers).send(http)
 
   private def timeIt[T](expression: => T): T = {
     val start = currentTimeMillis()

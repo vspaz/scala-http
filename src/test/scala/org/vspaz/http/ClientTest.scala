@@ -84,8 +84,8 @@ class ClientTest extends AnyFunSuite with Setup {
       )
     client.doPost(
       endpoint = "/test-post",
-      headers = Option(Map("Content-Type" -> MediaType.ApplicationJson.toString())),
-      payload = Option("""{"test": "json"}""")
+      headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
+      payload = """{"test": "json"}"""
     )
   }
   test("Client.doPutOk") {
@@ -98,8 +98,8 @@ class ClientTest extends AnyFunSuite with Setup {
       )
     client.doPut(
       endpoint = "/test-put",
-      headers = Option(Map("Content-Type" -> MediaType.ApplicationJson.toString())),
-      payload = Option("""{"test": "json"}""")
+      headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
+      payload = """{"test": "json"}"""
     )
   }
 
@@ -113,8 +113,8 @@ class ClientTest extends AnyFunSuite with Setup {
       )
     client.doPatch(
       endpoint = "/test-patch",
-      headers = Option(Map("Content-Type" -> MediaType.ApplicationJson.toString())),
-      payload = Option("""{"test": "json"}""")
+      headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
+      payload = """{"test": "json"}"""
     )
   }
 }
