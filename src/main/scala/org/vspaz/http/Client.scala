@@ -26,6 +26,7 @@ class Client(
       SttpBackendOptions.connectionTimeout(Duration(connectionTimeout, SECONDS))
     )
   )
+
   private def buildRequest(
     method: Method,
     endpoint: String,
@@ -49,22 +50,30 @@ class Client(
     headers: Map[String, String],
     payload: String
   ): Response[String] = {
-    var response: Identity[Response[String]] = null
-    try
-      response = buildRequest(
-        method = method,
-        endpoint = endpoint,
-        headers = headers,
-        payload = payload
-      ).send(http)
-
-    catch {
-      case e: sttp.client3.SttpClientException.ConnectException =>
-        println(s"${e.getCause} occurred")
-      case e: sttp.client3.SttpClientException.ReadException => println(s"${e.getCause} occurred")
-      case e: Exception                                      => println(s"${e.getCause} occurred")
+    for (attemptCount <- 1 to retryCount) {
+      var response: Identity[Response[String]] = null
+      try
+        response = buildRequest(
+          method = method,
+          endpoint = endpoint,
+          headers = headers,
+          payload = payload
+        ).send(http)
+      catch {
+        case e: sttp.client3.SttpClientException.ConnectException =>
+          println(s"${e.getCause} occurred")
+        case e: sttp.client3.SttpClientException.ReadException => println(s"${e.getCause} occurred")
+        case e: Exception                                      => println(s"${e.getCause} occurred")
+      }
+      if (response != null) {
+        if (response.code.isSuccess)
+          return response
+        if (!retryOnErrors.contains(response.code.code))
+          throw new RuntimeException(s"can't retry on {${response.code.code}}")
+      }
+      Thread.sleep(delay * attemptCount)
     }
-    response
+    throw new RuntimeException("failed to complete request")
   }
 
   private def doRequest(
