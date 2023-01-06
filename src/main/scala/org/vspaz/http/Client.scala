@@ -3,6 +3,7 @@ package org.vspaz.http
 import scala.concurrent.duration.{Duration, SECONDS}
 import sttp.client3.{Identity, _}
 import sttp.model.Method
+import org.slf4j.{Logger, LoggerFactory}
 
 import System.currentTimeMillis
 
@@ -17,7 +18,6 @@ class Client(
   delay: Int = 2,
   readTimeout: Int = 10,
   connectionTimeout: Int = 10,
-  logger: Option[ILogger] = None,
   backend: Option[SttpBackend[Identity, Any]] = None
 ) {
   private val responseTimeout = Duration(readTimeout, SECONDS)
