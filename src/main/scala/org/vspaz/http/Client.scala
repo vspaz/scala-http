@@ -26,6 +26,7 @@ class Client(
       SttpBackendOptions.connectionTimeout(Duration(connectionTimeout, SECONDS))
     )
   )
+  private val logger: Logger = LoggerFactory.getLogger(getClass.getName)
 
   private def buildRequest(
     method: Method,
@@ -60,9 +61,10 @@ class Client(
       ).send(http)
     catch {
       case e: sttp.client3.SttpClientException.ConnectException =>
-        println(s"${e.getCause} occurred")
-      case e: sttp.client3.SttpClientException.ReadException => println(s"${e.getCause} occurred")
-      case e: Exception                                      => println(s"${e.getCause} occurred")
+        logger.error(s"${e.getCause} occurred")
+      case e: sttp.client3.SttpClientException.ReadException =>
+        logger.error(s"${e.getCause} occurred")
+      case e: Exception => logger.error(s"${e.getCause} occurred")
     }
     response
   }
@@ -142,7 +144,7 @@ class Client(
   private def timeIt[T](expression: => T): T = {
     val start = currentTimeMillis()
     val result = expression
-    println(s"request took {$currentTimeMillis() - $start} to complete")
+    logger.info(s"request took {$currentTimeMillis() - $start} to complete")
     result
   }
 
