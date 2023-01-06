@@ -1,8 +1,9 @@
 package org.vspaz.http
 
 import scala.concurrent.duration.{Duration, SECONDS}
-import sttp.client3._
+import sttp.client3.{Identity, _}
 import sttp.model.Method
+
 import System.currentTimeMillis
 
 class Client(
@@ -42,10 +43,19 @@ class Client(
     request
   }
 
+  private def doRequest(
+    method: Method = Method.GET,
+    endpoint: String,
+    headers: Option[Map[String, String]] = None,
+    payload: Option[String] = None
+  ): RequestT[Identity, String, Any] = timeIt(
+    buildRequest(method = method, endpoint = endpoint, headers = headers, payload.getOrElse(""))
+  )
+
   def doGet(
     endpoint: String,
     headers: Option[Map[String, String]] = None
-  ): Identity[Response[String]] = buildRequest(
+  ): Identity[Response[String]] = doRequest(
     method = Method.GET,
     endpoint = endpoint,
     headers = headers
@@ -54,8 +64,8 @@ class Client(
   def doPost(
     endpoint: String,
     headers: Option[Map[String, String]] = None,
-    payload: String = ""
-  ): Identity[Response[String]] = buildRequest(
+    payload: Option[String] = None
+  ): Identity[Response[String]] = doRequest(
     method = Method.POST,
     endpoint = endpoint,
     headers = headers,
@@ -65,8 +75,8 @@ class Client(
   def doPatch(
     endpoint: String,
     headers: Option[Map[String, String]] = None,
-    payload: String = ""
-  ): Identity[Response[String]] = buildRequest(
+    payload: Option[String] = None
+  ): Identity[Response[String]] = doRequest(
     method = Method.PATCH,
     endpoint = endpoint,
     headers = headers,
@@ -76,8 +86,8 @@ class Client(
   def doPut(
     endpoint: String,
     headers: Option[Map[String, String]] = None,
-    payload: String = ""
-  ): Identity[Response[String]] = buildRequest(
+    payload: Option[String] = None
+  ): Identity[Response[String]] = doRequest(
     method = Method.PUT,
     endpoint = endpoint,
     headers = headers,
@@ -87,13 +97,13 @@ class Client(
   def doDelete(
     endpoint: String,
     headers: Option[Map[String, String]] = None
-  ): Identity[Response[String]] = buildRequest(
+  ): Identity[Response[String]] = doRequest(
     method = Method.DELETE,
     endpoint = endpoint,
     headers = headers
   ).send(http)
 
-  def timeIt[T](expression: => T): T = {
+  private def timeIt[T](expression: => T): T = {
     val start = currentTimeMillis()
     val result = expression
     println(s"request took {$currentTimeMillis() - $start} to complete")
