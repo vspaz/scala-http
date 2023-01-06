@@ -32,7 +32,11 @@ trait Setup {
         Response("accepted", StatusCode.Accepted)
       case request if request.method.equals(Method.PUT) =>
         assert(request.uri.path.endsWith(List("test-put")))
-        assert(request.headers().headers("User-Agent").head == "test-client")
+        assert(request.headers().headers("User-Agent").head == "test-put-client")
+        assert(
+          request.headers().headers("Content-Type").head == MediaType.ApplicationJson.toString()
+        )
+        assert(request.body == StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
         Response("accepted", StatusCode.Accepted)
     }
 }
@@ -76,6 +80,20 @@ class ClientTest extends AnyFunSuite with Setup {
       )
     client.doPost(
       endpoint = "/test-post",
+      headers = Option(Map("Content-Type" -> MediaType.ApplicationJson.toString())),
+      payload = """{"test": "json"}"""
+    )
+  }
+  test("Client.doPutOk") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        userAgent = "test-put-client",
+        backend = Option(testHttpBackend)
+      )
+    client.doPut(
+      endpoint = "/test-put",
       headers = Option(Map("Content-Type" -> MediaType.ApplicationJson.toString())),
       payload = """{"test": "json"}"""
     )
