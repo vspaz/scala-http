@@ -43,17 +43,35 @@ class Client(
     request
   }
 
+  private def handleRequest(
+    method: Method,
+    endpoint: String,
+    headers: Map[String, String],
+    payload: String
+  ): Option[Identity[Response[String]]] = {
+    var response: Option[Identity[Response[String]]] = None
+    try response = Option(doRequest(method, endpoint, headers, payload))
+    catch {
+      case e: sttp.client3.SttpClientException.ConnectException =>
+        println(s"${e.getCause} occurred")
+      case e: sttp.client3.SttpClientException.ReadException => println(s"${e.getCause} occurred")
+      case e: Exception                                      => println(s"${e.getCause} occurred")
+    }
+    response
+  }
+
   private def doRequest(
     method: Method = Method.GET,
     endpoint: String,
     headers: Map[String, String],
     payload: String = ""
-  ): RequestT[Identity, String, Any] = timeIt(
+  ): Identity[Response[String]] = timeIt(
     buildRequest(method = method, endpoint = endpoint, headers = headers, payload = payload)
+      .send(http)
   )
 
   def doGet(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
-    doRequest(method = Method.GET, endpoint = endpoint, headers = headers).send(http)
+    doRequest(method = Method.GET, endpoint = endpoint, headers = headers)
 
   def doPost(
     endpoint: String,
@@ -64,7 +82,7 @@ class Client(
     endpoint = endpoint,
     headers = headers,
     payload = payload
-  ).send(http)
+  )
 
   def doPatch(
     endpoint: String,
@@ -75,7 +93,7 @@ class Client(
     endpoint = endpoint,
     headers = headers,
     payload = payload
-  ).send(http)
+  )
 
   def doPut(
     endpoint: String,
@@ -86,7 +104,7 @@ class Client(
     endpoint = endpoint,
     headers = headers,
     payload = payload
-  ).send(http)
+  )
 
   def doDelete(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
     doRequest(method = Method.DELETE, endpoint = endpoint, headers = headers).send(http)
