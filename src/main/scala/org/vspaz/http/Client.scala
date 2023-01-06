@@ -48,9 +48,16 @@ class Client(
     endpoint: String,
     headers: Map[String, String],
     payload: String
-  ): Option[Identity[Response[String]]] = {
-    var response: Option[Identity[Response[String]]] = None
-    try response = Option(doRequest(method, endpoint, headers, payload))
+  ): Response[String] = {
+    var response: Identity[Response[String]] = null
+    try
+      response = buildRequest(
+        method = method,
+        endpoint = endpoint,
+        headers = headers,
+        payload = payload
+      ).send(http)
+
     catch {
       case e: sttp.client3.SttpClientException.ConnectException =>
         println(s"${e.getCause} occurred")
@@ -66,8 +73,7 @@ class Client(
     headers: Map[String, String],
     payload: String = ""
   ): Identity[Response[String]] = timeIt(
-    buildRequest(method = method, endpoint = endpoint, headers = headers, payload = payload)
-      .send(http)
+    handleRequest(method = method, endpoint = endpoint, headers = headers, payload = payload)
   )
 
   def doGet(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
