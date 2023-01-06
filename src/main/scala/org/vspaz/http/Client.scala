@@ -3,6 +3,7 @@ package org.vspaz.http
 import scala.concurrent.duration.{Duration, SECONDS}
 import sttp.client3._
 import sttp.model.Method
+import System.currentTimeMillis
 
 class Client(
   host: String = "",
@@ -91,6 +92,13 @@ class Client(
     endpoint = endpoint,
     headers = headers
   ).send(http)
+
+  def timeIt[T](expression: => T): T = {
+    val start = currentTimeMillis()
+    val result = expression
+    println(s"request took {$currentTimeMillis() - $start} to complete")
+    result
+  }
 
   override def toString: String =
     s"host: '$host', userAgent: '$userAgent', readTimeout: '$readTimeout', 'connectionTimeout: '$connectionTimeout'"
