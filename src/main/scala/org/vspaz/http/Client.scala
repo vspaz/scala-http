@@ -50,21 +50,33 @@ class Client(
     headers: Map[String, String],
     payload: String
   ): Response[String] = {
+    var response: Identity[Response[String]] = null
+    try
+      response = buildRequest(
+        method = method,
+        endpoint = endpoint,
+        headers = headers,
+        payload = payload
+      ).send(http)
+    catch {
+      case e: sttp.client3.SttpClientException.ConnectException =>
+        println(s"${e.getCause} occurred")
+      case e: sttp.client3.SttpClientException.ReadException => println(s"${e.getCause} occurred")
+      case e: Exception                                      => println(s"${e.getCause} occurred")
+    }
+    response
+  }
+
+  private def retryRequest(
+    method: Method,
+    endpoint: String,
+    headers: Map[String, String],
+    payload: String
+  ): Response[String] = {
     for (attemptCount <- 1 to retryCount) {
-      var response: Identity[Response[String]] = null
-      try
-        response = buildRequest(
-          method = method,
-          endpoint = endpoint,
-          headers = headers,
-          payload = payload
-        ).send(http)
-      catch {
-        case e: sttp.client3.SttpClientException.ConnectException =>
-          println(s"${e.getCause} occurred")
-        case e: sttp.client3.SttpClientException.ReadException => println(s"${e.getCause} occurred")
-        case e: Exception                                      => println(s"${e.getCause} occurred")
-      }
+      val response: Identity[Response[String]] = timeIt(
+        handleRequest(method = method, endpoint = endpoint, headers = headers, payload = payload)
+      )
       if (response != null) {
         if (response.code.isSuccess)
           return response
@@ -81,8 +93,11 @@ class Client(
     endpoint: String,
     headers: Map[String, String],
     payload: String = ""
-  ): Identity[Response[String]] = timeIt(
-    handleRequest(method = method, endpoint = endpoint, headers = headers, payload = payload)
+  ): Identity[Response[String]] = retryRequest(
+    method = method,
+    endpoint = endpoint,
+    headers = headers,
+    payload = payload
   )
 
   def doGet(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
