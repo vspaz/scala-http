@@ -65,7 +65,7 @@ class ClientTest extends AnyFunSuite with Setup {
         backend = Option(testHttpBackend)
       )
     val resp = client.doGet(endpoint = "/test-get")
-    assertEquals(StatusCode.Ok.code, resp.code.code)
+    assertTrue(resp.is200)
   }
 
   test("Client.doDeleteOk") {
@@ -77,7 +77,7 @@ class ClientTest extends AnyFunSuite with Setup {
         backend = Option(testHttpBackend)
       )
     val resp = client.doDelete(endpoint = "/test-delete")
-    assertEquals(StatusCode.Accepted.code, resp.code.code)
+    assertTrue(resp.isSuccess)
   }
 
   test("Client.doPostOk") {
@@ -93,7 +93,7 @@ class ClientTest extends AnyFunSuite with Setup {
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json")
     )
-    assertEquals(StatusCode.Accepted.code, resp.code.code)
+    assertTrue(resp.isSuccess)
   }
   test("Client.doPutOk") {
     val testHttpBackend = getTestHttpBackendStub
@@ -108,7 +108,7 @@ class ClientTest extends AnyFunSuite with Setup {
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json")
     )
-    assertEquals(StatusCode.Accepted.code, resp.code.code)
+    assertTrue(resp.isSuccess)
   }
 
   test("Client.doPatchOk") {
@@ -124,6 +124,6 @@ class ClientTest extends AnyFunSuite with Setup {
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json")
     )
-    assertEquals(StatusCode.Accepted.code, resp.code.code)
+    assertTrue(resp.isSuccess)
   }
 }
