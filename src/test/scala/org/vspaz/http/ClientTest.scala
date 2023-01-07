@@ -155,7 +155,7 @@ class ClientTest extends AnyFunSuite with Setup {
       case e: RuntimeException =>
         assertTrue(true)
         assertEquals(e.getMessage, "failed to complete request")
-      case _ => new AssertionError
+      case _: Throwable => new AssertionError
     }
   }
 }
