@@ -16,6 +16,11 @@ trait Setup {
           basicRequest.get(uri = uri"http://mock.api/connect-exception"),
           new RuntimeException("failed to connect")
         )
+      case request if request.uri.path.endsWith(List("read-exception")) =>
+        throw new SttpClientException.ConnectException(
+          basicRequest.get(uri = uri"http://mock.api/read-exception"),
+          new RuntimeException("failed to read from a socket")
+        )
       case request if request.method.equals(Method.GET) =>
         assertTrue(request.uri.path.endsWith(List("test-get")))
         assertEquals("test-get-client", request.headers().headers("User-Agent").head)
@@ -142,7 +147,7 @@ class ClientTest extends AnyFunSuite with Setup {
       new Client(
         host = "http://mock.api",
         userAgent = "test-exception-client",
-        delay = 30,
+        delay = 2,
         backend = Option(testHttpBackend)
       )
     try client.doGet(endpoint = "/connect-exception")
