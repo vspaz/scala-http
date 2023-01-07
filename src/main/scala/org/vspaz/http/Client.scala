@@ -36,24 +36,24 @@ class Client(
     method: Method,
     endpoint: String,
     headers: Map[String, String] = Map(),
-    payload: String = ""
+    payload: Option[Any] = None
   ): RequestT[Identity, String, Any] = {
-    val request = basicRequest
+    var request = basicRequest
       .headers(headers ++ Map("User-Agent" -> userAgent))
       .readTimeout(responseTimeout)
       .method(method, uri = uri"${host + endpoint}")
-      .body(payload)
-      .response(asStringAlways)
     if (basicAuthUser != "" && basicUserPassword != "")
-      request.auth.basic(basicAuthUser, basicUserPassword)
-    request
+      request = request.auth.basic(basicAuthUser, basicUserPassword)
+    if (payload.isDefined)
+      request = request.body(mapper.writer.writeValueAsString(payload))
+    request.response(asStringAlways)
   }
 
   private def handleRequest(
     method: Method,
     endpoint: String,
     headers: Map[String, String],
-    payload: Object
+    payload: Any = None
   ): Response[String] = {
     var response: Identity[Response[String]] = null
     try
@@ -61,7 +61,7 @@ class Client(
         method = method,
         endpoint = endpoint,
         headers = headers,
-        payload = mapper.writer.writeValueAsString(payload)
+        payload = Option(payload)
       ).send(http)
     catch {
       case e: sttp.client3.SttpClientException.ConnectException =>
@@ -77,7 +77,7 @@ class Client(
     method: Method,
     endpoint: String,
     headers: Map[String, String],
-    payload: Object
+    payload: Any
   ): Response[String] = {
     for (attemptCount <- 1 to retryCount) {
       val response: Identity[Response[String]] = timeIt(
@@ -98,7 +98,7 @@ class Client(
     method: Method = Method.GET,
     endpoint: String,
     headers: Map[String, String],
-    payload: Object = ""
+    payload: Any = None
   ): Identity[Response[String]] = retryRequest(
     method = method,
     endpoint = endpoint,
@@ -112,7 +112,7 @@ class Client(
   def doPost(
     endpoint: String,
     headers: Map[String, String] = Map(),
-    payload: Object = None
+    payload: Any = None
   ): Identity[Response[String]] = doRequest(
     method = Method.POST,
     endpoint = endpoint,
@@ -123,7 +123,7 @@ class Client(
   def doPatch(
     endpoint: String,
     headers: Map[String, String] = Map(),
-    payload: Object = None
+    payload: Any = None
   ): Identity[Response[String]] = doRequest(
     method = Method.PATCH,
     endpoint = endpoint,
@@ -134,7 +134,7 @@ class Client(
   def doPut(
     endpoint: String,
     headers: Map[String, String] = Map(),
-    payload: Object = None
+    payload: Any = None
   ): Identity[Response[String]] = doRequest(
     method = Method.PUT,
     endpoint = endpoint,
