@@ -5,6 +5,8 @@ import sttp.client3.{Identity, Response, StringBody}
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
 import sttp.model.{MediaType, Method, StatusCode}
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 
 trait Setup {
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
