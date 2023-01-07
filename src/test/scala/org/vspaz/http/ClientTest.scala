@@ -66,6 +66,7 @@ class ClientTest extends AnyFunSuite with Setup {
       )
     val resp = client.doGet(endpoint = "/test-get")
     assertTrue(resp.is200)
+    assertEquals("Ok", resp.body)
   }
 
   test("Client.doDeleteOk") {
@@ -78,6 +79,7 @@ class ClientTest extends AnyFunSuite with Setup {
       )
     val resp = client.doDelete(endpoint = "/test-delete")
     assertTrue(resp.isSuccess)
+    assertEquals("accepted", resp.body)
   }
 
   test("Client.doPostOk") {
@@ -94,6 +96,7 @@ class ClientTest extends AnyFunSuite with Setup {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess)
+    assertEquals("accepted", resp.body)
   }
   test("Client.doPutOk") {
     val testHttpBackend = getTestHttpBackendStub
@@ -109,6 +112,7 @@ class ClientTest extends AnyFunSuite with Setup {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess)
+    assertEquals("accepted", resp.body)
   }
 
   test("Client.doPatchOk") {
@@ -125,5 +129,6 @@ class ClientTest extends AnyFunSuite with Setup {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess)
+    assertEquals("accepted", resp.body)
   }
 }
