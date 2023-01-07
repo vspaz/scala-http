@@ -91,7 +91,7 @@ class Client(
         if (!retryOnErrors.contains(response.code.code))
           throw new RuntimeException(s"can't retry on {${response.code.code}}")
       }
-      Thread.sleep(delay * attemptCount)
+      Thread.sleep(delay * 1000 * attemptCount)
     }
     throw new RuntimeException("failed to complete request")
   }
