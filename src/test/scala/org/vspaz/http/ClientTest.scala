@@ -5,7 +5,6 @@ import sttp.client3.{Identity, Response, StringBody}
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
 import sttp.model.{MediaType, Method, StatusCode}
-import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 
 trait Setup {
@@ -13,45 +12,48 @@ trait Setup {
     .synchronous
     .whenRequestMatchesPartial {
       case request if request.method.equals(Method.GET) =>
-        assert(request.uri.path.endsWith(List("test-get")))
-        assert(request.headers().headers("User-Agent").head == "test-get-client")
+        assertTrue(request.uri.path.endsWith(List("test-get")))
+        assertEquals(request.headers().headers("User-Agent").head, "test-get-client")
         Response("Ok", StatusCode.Ok)
       case request if request.method.equals(Method.DELETE) =>
-        assert(request.uri.path.endsWith(List("test-delete")))
-        assert(request.headers().headers("User-Agent").head == "test-delete-client")
+        assertTrue(request.uri.path.endsWith(List("test-delete")))
+        assertEquals(request.headers().headers("User-Agent").head, "test-delete-client")
         Response("accepted", StatusCode.Accepted)
       case request if request.method.equals(Method.POST) =>
-        assert(request.uri.path.endsWith(List("test-post")))
-        assert(request.headers().headers("User-Agent").head == "test-post-client")
-        assert(
-          request.headers().headers("Content-Type").head == MediaType.ApplicationJson.toString()
+        assertTrue(request.uri.path.endsWith(List("test-post")))
+        assertEquals(request.headers().headers("User-Agent").head, "test-post-client")
+        assertEquals(
+          request.headers().headers("Content-Type").head,
+          MediaType.ApplicationJson.toString()
         )
-        assert(request.body == StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
+        assertEquals(request.body, StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
         Response("accepted", StatusCode.Accepted)
       case request if request.method.equals(Method.PATCH) =>
-        assert(request.uri.path.endsWith(List("test-patch")))
-        assert(request.headers().headers("User-Agent").head == "test-patch-client")
-        assert(
-          request.headers().headers("Content-Type").head == MediaType.ApplicationJson.toString()
+        assertTrue(request.uri.path.endsWith(List("test-patch")))
+        assertEquals(request.headers().headers("User-Agent").head, "test-patch-client")
+        assertEquals(
+          request.headers().headers("Content-Type").head,
+          MediaType.ApplicationJson.toString()
         )
-        assert(request.body == StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
+        assertEquals(request.body, StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
         Response("accepted", StatusCode.Accepted)
       case request if request.method.equals(Method.PUT) =>
-        assert(request.uri.path.endsWith(List("test-put")))
-        assert(request.headers().headers("User-Agent").head == "test-put-client")
-        assert(
-          request.headers().headers("Content-Type").head == MediaType.ApplicationJson.toString()
+        assertTrue(request.uri.path.endsWith(List("test-put")))
+        assertEquals(request.headers().headers("User-Agent").head, "test-put-client")
+        assertEquals(
+          request.headers().headers("Content-Type").head,
+          MediaType.ApplicationJson.toString()
         )
-        assert(request.body == StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
+        assertEquals(request.body, StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
         Response("accepted", StatusCode.Accepted)
     }
 }
 
 class ClientTest extends AnyFunSuite with Setup {
   test("Client.InitOk") {
-    assert(
-      "host: '', userAgent: '', readTimeout: '10', 'connectionTimeout: '10'" == new Client()
-        .toString
+    assertEquals(
+      "host: '', userAgent: '', readTimeout: '10', 'connectionTimeout: '10'",
+      new Client().toString
     )
   }
   test("Client.doGetOk") {
