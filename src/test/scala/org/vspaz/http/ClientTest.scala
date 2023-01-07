@@ -13,7 +13,7 @@ trait Setup {
     .whenRequestMatchesPartial {
       case request if request.uri.path.endsWith(List("connection-exception")) =>
         throw new SttpClientException.ConnectException(
-          basicRequest.get(uri = uri"http://example.com/connect-exception"),
+          basicRequest.get(uri = uri"http://mock.api/connect-exception"),
           new RuntimeException("failed to connect")
         )
       case request if request.method.equals(Method.GET) =>
@@ -135,5 +135,20 @@ class ClientTest extends AnyFunSuite with Setup {
     )
     assertTrue(resp.isSuccess)
     assertEquals("accepted", resp.body)
+  }
+  test("Client.DoGetConnectionTimeoutFail") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        userAgent = "test-exception-client",
+        delay = 30,
+        backend = Option(testHttpBackend)
+      )
+    try client.doGet(endpoint = "/connect-exception")
+    catch {
+      case e: RuntimeException => assertTrue(true)
+      case _                   => new AssertionError
+    }
   }
 }

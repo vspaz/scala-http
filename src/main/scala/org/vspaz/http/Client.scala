@@ -70,7 +70,7 @@ class Client(
         logger.error(s"${e.getCause} occurred")
       case e: sttp.client3.SttpClientException.ReadException =>
         logger.error(s"${e.getCause} occurred")
-      case e: Exception => logger.error(s"${e.getCause} occurred")
+      case e: Throwable => logger.error(s"${e.getCause} occurred")
     }
     response
   }
