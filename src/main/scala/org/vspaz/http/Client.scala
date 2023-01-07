@@ -123,7 +123,7 @@ class Client(
   def doPatch(
     endpoint: String,
     headers: Map[String, String] = Map(),
-    payload: String = ""
+    payload: Object = None
   ): Identity[Response[String]] = doRequest(
     method = Method.PATCH,
     endpoint = endpoint,
@@ -134,7 +134,7 @@ class Client(
   def doPut(
     endpoint: String,
     headers: Map[String, String] = Map(),
-    payload: String = ""
+    payload: Object = None
   ): Identity[Response[String]] = doRequest(
     method = Method.PUT,
     endpoint = endpoint,

@@ -35,7 +35,7 @@ trait Setup {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
-        assertEquals(StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain), request.body)
+        assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
         Response("accepted", StatusCode.Accepted)
       case request if request.method.equals(Method.PUT) =>
         assertTrue(request.uri.path.endsWith(List("test-put")))
@@ -44,7 +44,7 @@ trait Setup {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
-        assertEquals(StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain), request.body)
+        assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
         Response("accepted", StatusCode.Accepted)
     }
 }
@@ -103,7 +103,7 @@ class ClientTest extends AnyFunSuite with Setup {
     client.doPut(
       endpoint = "/test-put",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
-      payload = """{"test": "json"}"""
+      payload = Map("test" -> "json")
     )
   }
 
@@ -118,7 +118,7 @@ class ClientTest extends AnyFunSuite with Setup {
     client.doPatch(
       endpoint = "/test-patch",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
-      payload = """{"test": "json"}"""
+      payload = Map("test" -> "json")
     )
   }
 }
