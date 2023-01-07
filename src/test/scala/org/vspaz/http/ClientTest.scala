@@ -152,8 +152,10 @@ class ClientTest extends AnyFunSuite with Setup {
       )
     try client.doGet(endpoint = "/connect-exception")
     catch {
-      case e: RuntimeException => assertTrue(true)
-      case _                   => new AssertionError
+      case e: RuntimeException =>
+        assertTrue(true)
+        assertEquals(e.getMessage, "failed to complete request")
+      case _ => new AssertionError
     }
   }
 }
