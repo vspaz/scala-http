@@ -13,38 +13,38 @@ trait Setup {
     .whenRequestMatchesPartial {
       case request if request.method.equals(Method.GET) =>
         assertTrue(request.uri.path.endsWith(List("test-get")))
-        assertEquals(request.headers().headers("User-Agent").head, "test-get-client")
+        assertEquals("test-get-client", request.headers().headers("User-Agent").head)
         Response("Ok", StatusCode.Ok)
       case request if request.method.equals(Method.DELETE) =>
         assertTrue(request.uri.path.endsWith(List("test-delete")))
-        assertEquals(request.headers().headers("User-Agent").head, "test-delete-client")
+        assertEquals("test-delete-client", request.headers().headers("User-Agent").head)
         Response("accepted", StatusCode.Accepted)
       case request if request.method.equals(Method.POST) =>
         assertTrue(request.uri.path.endsWith(List("test-post")))
-        assertEquals(request.headers().headers("User-Agent").head, "test-post-client")
+        assertEquals("test-post-client", request.headers().headers("User-Agent").head)
         assertEquals(
-          request.headers().headers("Content-Type").head,
-          MediaType.ApplicationJson.toString()
+          MediaType.ApplicationJson.toString(),
+          request.headers().headers("Content-Type").head
         )
-        assertEquals(request.body, StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
+        assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
         Response("accepted", StatusCode.Accepted)
       case request if request.method.equals(Method.PATCH) =>
         assertTrue(request.uri.path.endsWith(List("test-patch")))
-        assertEquals(request.headers().headers("User-Agent").head, "test-patch-client")
+        assertEquals("test-patch-client", request.headers().headers("User-Agent").head)
         assertEquals(
-          request.headers().headers("Content-Type").head,
-          MediaType.ApplicationJson.toString()
+          MediaType.ApplicationJson.toString(),
+          request.headers().headers("Content-Type").head
         )
-        assertEquals(request.body, StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
+        assertEquals(StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain), request.body)
         Response("accepted", StatusCode.Accepted)
       case request if request.method.equals(Method.PUT) =>
         assertTrue(request.uri.path.endsWith(List("test-put")))
-        assertEquals(request.headers().headers("User-Agent").head, "test-put-client")
+        assertEquals("test-put-client", request.headers().headers("User-Agent").head)
         assertEquals(
-          request.headers().headers("Content-Type").head,
-          MediaType.ApplicationJson.toString()
+          MediaType.ApplicationJson.toString(),
+          request.headers().headers("Content-Type").head
         )
-        assertEquals(request.body, StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain))
+        assertEquals(StringBody("""{"test": "json"}""", "utf-8", MediaType.TextPlain), request.body)
         Response("accepted", StatusCode.Accepted)
     }
 }
@@ -89,7 +89,7 @@ class ClientTest extends AnyFunSuite with Setup {
     client.doPost(
       endpoint = "/test-post",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
-      payload = """{"test": "json"}"""
+      payload = Map("test" -> "json")
     )
   }
   test("Client.doPutOk") {

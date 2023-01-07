@@ -6,6 +6,8 @@ import sttp.model.Method
 import org.slf4j.{Logger, LoggerFactory}
 
 import System.currentTimeMillis
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 class Client(
   host: String = "",
@@ -27,6 +29,8 @@ class Client(
     )
   )
   private val logger: Logger = LoggerFactory.getLogger(getClass.getName)
+  private val mapper: ObjectMapper = new ObjectMapper()
+  mapper.registerModule(DefaultScalaModule)
 
   private def buildRequest(
     method: Method,
@@ -49,7 +53,7 @@ class Client(
     method: Method,
     endpoint: String,
     headers: Map[String, String],
-    payload: String
+    payload: Object
   ): Response[String] = {
     var response: Identity[Response[String]] = null
     try
@@ -57,7 +61,7 @@ class Client(
         method = method,
         endpoint = endpoint,
         headers = headers,
-        payload = payload
+        payload = mapper.writer.writeValueAsString(payload)
       ).send(http)
     catch {
       case e: sttp.client3.SttpClientException.ConnectException =>
@@ -73,7 +77,7 @@ class Client(
     method: Method,
     endpoint: String,
     headers: Map[String, String],
-    payload: String
+    payload: Object
   ): Response[String] = {
     for (attemptCount <- 1 to retryCount) {
       val response: Identity[Response[String]] = timeIt(
@@ -94,7 +98,7 @@ class Client(
     method: Method = Method.GET,
     endpoint: String,
     headers: Map[String, String],
-    payload: String = ""
+    payload: Object = ""
   ): Identity[Response[String]] = retryRequest(
     method = method,
     endpoint = endpoint,
@@ -108,7 +112,7 @@ class Client(
   def doPost(
     endpoint: String,
     headers: Map[String, String] = Map(),
-    payload: String = ""
+    payload: Object = None
   ): Identity[Response[String]] = doRequest(
     method = Method.POST,
     endpoint = endpoint,
