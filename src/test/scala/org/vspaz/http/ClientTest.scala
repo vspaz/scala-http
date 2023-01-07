@@ -64,7 +64,8 @@ class ClientTest extends AnyFunSuite with Setup {
         userAgent = "test-get-client",
         backend = Option(testHttpBackend)
       )
-    client.doGet(endpoint = "/test-get")
+    val resp = client.doGet(endpoint = "/test-get")
+    assertEquals(StatusCode.Ok.code, resp.code.code)
   }
 
   test("Client.doDeleteOk") {
@@ -75,7 +76,8 @@ class ClientTest extends AnyFunSuite with Setup {
         userAgent = "test-delete-client",
         backend = Option(testHttpBackend)
       )
-    client.doDelete(endpoint = "/test-delete")
+    val resp = client.doDelete(endpoint = "/test-delete")
+    assertEquals(StatusCode.Accepted.code, resp.code.code)
   }
 
   test("Client.doPostOk") {
@@ -86,11 +88,12 @@ class ClientTest extends AnyFunSuite with Setup {
         userAgent = "test-post-client",
         backend = Option(testHttpBackend)
       )
-    client.doPost(
+    val resp = client.doPost(
       endpoint = "/test-post",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json")
     )
+    assertEquals(StatusCode.Accepted.code, resp.code.code)
   }
   test("Client.doPutOk") {
     val testHttpBackend = getTestHttpBackendStub
@@ -100,11 +103,12 @@ class ClientTest extends AnyFunSuite with Setup {
         userAgent = "test-put-client",
         backend = Option(testHttpBackend)
       )
-    client.doPut(
+    val resp = client.doPut(
       endpoint = "/test-put",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json")
     )
+    assertEquals(StatusCode.Accepted.code, resp.code.code)
   }
 
   test("Client.doPatchOk") {
@@ -115,10 +119,11 @@ class ClientTest extends AnyFunSuite with Setup {
         userAgent = "test-patch-client",
         backend = Option(testHttpBackend)
       )
-    client.doPatch(
+    val resp = client.doPatch(
       endpoint = "/test-patch",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json")
     )
+    assertEquals(StatusCode.Accepted.code, resp.code.code)
   }
 }
