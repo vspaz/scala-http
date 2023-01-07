@@ -14,7 +14,7 @@ class Client(
   userAgent: String = "",
   basicAuthUser: String = "",
   basicUserPassword: String = "",
-  token: String = "",
+  token: Option[String] = None,
   retryCount: Int = 3,
   retryOnErrors: Set[Int] = Set(),
   delay: Int = 2,
@@ -44,8 +44,10 @@ class Client(
       .method(method, uri = uri"${host + endpoint}")
     if (basicAuthUser != "" && basicUserPassword != "")
       request = request.auth.basic(basicAuthUser, basicUserPassword)
+    if (token.isDefined)
+      request = request.auth.bearer(token.get)
     if (payload.isDefined)
-      request = request.body(mapper.writer.writeValueAsString(payload))
+      request = request.body(mapper.writer.writeValueAsString(payload.get))
     request.response(asStringAlways)
   }
 
