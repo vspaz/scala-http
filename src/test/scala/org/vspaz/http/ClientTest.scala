@@ -1,7 +1,7 @@
 package org.vspaz.http
 
 import org.scalatest.funsuite.AnyFunSuite
-import sttp.client3.{Identity, Response, StringBody}
+import sttp.client3.{Identity, Response, StringBody, SttpClientException, UriContext, basicRequest}
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
 import sttp.model.{MediaType, Method, StatusCode}
@@ -11,6 +11,11 @@ trait Setup {
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
     .synchronous
     .whenRequestMatchesPartial {
+      case request if request.uri.path.endsWith(List("connection-exception")) =>
+        throw new SttpClientException.ConnectException(
+          basicRequest.get(uri = uri"http://example.com/connect-exception"),
+          new RuntimeException("failed to connect")
+        )
       case request if request.method.equals(Method.GET) =>
         assertTrue(request.uri.path.endsWith(List("test-get")))
         assertEquals("test-get-client", request.headers().headers("User-Agent").head)
