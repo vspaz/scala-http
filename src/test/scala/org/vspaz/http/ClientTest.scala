@@ -15,6 +15,12 @@ import java.lang.System.currentTimeMillis
 trait Setup {
   var retryCount: Int = 0
 
+  val serializer: JsonMapper = JsonMapper.builder().build()
+  serializer.registerModule(DefaultScalaModule)
+
+  val deserializer: ObjectMapper = new ObjectMapper()
+  deserializer.registerModule(DefaultScalaModule)
+
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
     .synchronous
     .whenRequestMatchesPartial {
@@ -62,10 +68,9 @@ trait Setup {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
-        val mapper: ObjectMapper = new ObjectMapper()
-        mapper.registerModule(DefaultScalaModule)
+
         assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
-        Response(mapper.writer.writeValueAsString(Map("test" -> "json")), StatusCode.Accepted)
+        Response(deserializer.writer.writeValueAsString(Map("test" -> "json")), StatusCode.Accepted)
       case request if request.method.equals(Method.PATCH) =>
         assertTrue(request.uri.path.endsWith(List("test-patch")))
         assertEquals("test-patch-client", request.headers().headers("User-Agent").head)
@@ -88,6 +93,7 @@ trait Setup {
 }
 
 class ClientTest extends AnyFunSuite with Setup {
+
   test("Client.InitOk") {
     assertEquals(
       "host: '', userAgent: '', readTimeout: '10', 'connectionTimeout: '10'",
@@ -147,9 +153,8 @@ class ClientTest extends AnyFunSuite with Setup {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess)
-    val mapper = JsonMapper.builder().build()
-    mapper.registerModule(DefaultScalaModule)
-    val decodedBody = mapper.readValue(resp.body, classOf[Map[String, String]])
+
+    val decodedBody = deserializer.readValue(resp.body, classOf[Map[String, String]])
     assertEquals(Map("test" -> "json"), decodedBody)
   }
   test("Client.doPutOk") {
