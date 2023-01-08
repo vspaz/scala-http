@@ -30,6 +30,10 @@ trait Setup {
         assertTrue(request.uri.path.endsWith(List("test-get")))
         assertEquals("test-get-client", request.headers().headers("User-Agent").head)
         Response("Ok", StatusCode.Ok)
+      case request if request.method.equals(Method.HEAD) =>
+        assertTrue(request.uri.path.endsWith(List("test-head")))
+        assertEquals("test-head-client", request.headers().headers("User-Agent").head)
+        Response("Ok", StatusCode.Ok)
       case request if request.method.equals(Method.DELETE) =>
         assertTrue(request.uri.path.endsWith(List("test-delete")))
         assertEquals("test-delete-client", request.headers().headers("User-Agent").head)
