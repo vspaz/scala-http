@@ -88,6 +88,19 @@ class ClientTest extends AnyFunSuite with Setup {
     assertEquals("Ok", resp.body)
   }
 
+  test("Client.doHeadOk") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        userAgent = "test-head-client",
+        backend = Option(testHttpBackend)
+      )
+    val resp = client.doHead(endpoint = "/test-head")
+    assertTrue(resp.is200)
+    assertEquals("Ok", resp.body)
+  }
+
   test("Client.doDeleteOk") {
     val testHttpBackend = getTestHttpBackendStub
     val client =
