@@ -181,8 +181,8 @@ class ClientTest extends AnyFunSuite with Setup {
       new Client(
         host = "http://mock.api",
         userAgent = "test-exception-client",
-        delay = 1,
-        retryCount = 1,
+        delay = 0,
+        retryCount = 0,
         backend = Option(testHttpBackend)
       )
     try client.doGet(endpoint = "/connect-exception")
@@ -199,8 +199,8 @@ class ClientTest extends AnyFunSuite with Setup {
       new Client(
         host = "http://mock.api",
         userAgent = "test-exception-client",
-        delay = 1,
-        retryCount = 1,
+        delay = 0,
+        retryCount = 0,
         backend = Option(testHttpBackend)
       )
     try client.doGet(endpoint = "/read-exception")
@@ -217,8 +217,8 @@ class ClientTest extends AnyFunSuite with Setup {
       new Client(
         host = "http://mock.api",
         userAgent = "test-exception-client",
-        delay = 1,
-        retryCount = 1,
+        delay = 0,
+        retryCount = 0,
         backend = Option(testHttpBackend)
       )
     try client.doGet(endpoint = "/timeout-exception")
