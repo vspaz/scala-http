@@ -51,6 +51,9 @@ class Client(
     request.response(asStringAlways)
   }
 
+  private def logError(exception: Exception): Unit = logger
+    .error(s"${exception.getCause}: ${exception.getMessage}")
+
   private def handleRequest(
     method: Method,
     endpoint: String,
@@ -66,13 +69,10 @@ class Client(
         payload = Option(payload)
       ).send(http)
     catch {
-      case e: sttp.client3.SttpClientException.ConnectException =>
-        logger.error(s"${e.getCause} occurred")
-      case e: sttp.client3.SttpClientException.ReadException =>
-        logger.error(s"${e.getCause} occurred")
-      case e: sttp.client3.SttpClientException.TimeoutException =>
-        logger.error(s"${e.getCause} occurred")
-      case e: Throwable => logger.error(s"${e.getCause} occurred")
+      case e: sttp.client3.SttpClientException.ConnectException => logError(exception = e)
+      case e: sttp.client3.SttpClientException.ReadException    => logError(exception = e)
+      case e: sttp.client3.SttpClientException.TimeoutException => logError(exception = e)
+      case e: Throwable => logger.error(s"${e.getCause}: ${e.getMessage}")
     }
     response
   }
