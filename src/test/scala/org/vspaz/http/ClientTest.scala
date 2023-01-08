@@ -21,6 +21,11 @@ trait Setup {
           basicRequest.get(uri = uri"http://mock.api/read-exception"),
           new RuntimeException("failed to read from a socket")
         )
+      case request if request.uri.path.endsWith(List("timeout-exception")) =>
+        throw new SttpClientException.ConnectException(
+          basicRequest.get(uri = uri"http://mock.api/timeout-exception"),
+          new RuntimeException("timed occurred")
+        )
       case request if request.method.equals(Method.GET) =>
         assertTrue(request.uri.path.endsWith(List("test-get")))
         assertEquals("test-get-client", request.headers().headers("User-Agent").head)
