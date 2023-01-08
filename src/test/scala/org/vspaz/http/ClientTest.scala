@@ -1,5 +1,8 @@
 package org.vspaz.http
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import org.scalatest.funsuite.AnyFunSuite
 import sttp.client3.{Identity, Response, StringBody, SttpClientException, UriContext, basicRequest}
 import sttp.capabilities.WebSockets
@@ -59,8 +62,10 @@ trait Setup {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
+        val mapper: ObjectMapper = new ObjectMapper()
+        mapper.registerModule(DefaultScalaModule)
         assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
-        Response("accepted", StatusCode.Accepted)
+        Response(mapper.writer.writeValueAsString(Map("test" -> "json")), StatusCode.Accepted)
       case request if request.method.equals(Method.PATCH) =>
         assertTrue(request.uri.path.endsWith(List("test-patch")))
         assertEquals("test-patch-client", request.headers().headers("User-Agent").head)
@@ -142,7 +147,10 @@ class ClientTest extends AnyFunSuite with Setup {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess)
-    assertEquals("accepted", resp.body)
+    val mapper = JsonMapper.builder().build()
+    mapper.registerModule(DefaultScalaModule)
+    val decodedBody = mapper.readValue(resp.body, classOf[Map[String, String]])
+    assertEquals(Map("test" -> "json"), decodedBody)
   }
   test("Client.doPutOk") {
     val testHttpBackend = getTestHttpBackendStub
