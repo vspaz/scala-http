@@ -115,6 +115,9 @@ class Client(
   def doGet(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
     doRequest(method = Method.GET, endpoint = endpoint, headers = headers)
 
+  def doHead(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
+    doRequest(method = Method.HEAD, endpoint = endpoint, headers = headers)
+
   def doPost(
     endpoint: String,
     headers: Map[String, String] = Map(),
