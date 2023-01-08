@@ -8,9 +8,20 @@ import sttp.model.{MediaType, Method, StatusCode}
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 
 trait Setup {
+  var retryCount: Int = 0
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
     .synchronous
     .whenRequestMatchesPartial {
+      case request if request.uri.path.endsWith(List("retry-request")) =>
+        if (retryCount <= 1)
+          throw new SttpClientException.ReadException(
+            basicRequest.get(uri = uri"http://mock.api/retry-request"),
+            new RuntimeException("failed to connect")
+          )
+        else {
+          assertEquals("test-get-client", request.headers().headers("User-Agent").head)
+          Response(s"retry count: $retryCount", StatusCode.Ok)
+        }
       case request if request.uri.path.endsWith(List("connection-exception")) =>
         throw new SttpClientException.ConnectException(
           basicRequest.get(uri = uri"http://mock.api/connect-exception"),
@@ -22,7 +33,7 @@ trait Setup {
           new RuntimeException("failed to read from a socket")
         )
       case request if request.uri.path.endsWith(List("timeout-exception")) =>
-        throw new SttpClientException.ConnectException(
+        throw new SttpClientException.TimeoutException(
           basicRequest.get(uri = uri"http://mock.api/timeout-exception"),
           new RuntimeException("timed occurred")
         )
