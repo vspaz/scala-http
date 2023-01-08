@@ -7,6 +7,8 @@ import sttp.client3.testing.SttpBackendStub
 import sttp.model.{MediaType, Method, StatusCode}
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 
+import java.lang.System.currentTimeMillis
+
 trait Setup {
   var retryCount: Int = 0
 
@@ -238,7 +240,10 @@ class ClientTest extends AnyFunSuite with Setup {
         delay = 1,
         backend = Option(testHttpBackend)
       )
+    val start = currentTimeMillis()
     val resp = client.doGet(endpoint = "/retry-request")
+    val requestTime = (currentTimeMillis() - start) / 1000
+    assert(requestTime >= 1 && requestTime <= 2)
     assertTrue(resp.isSuccess)
     assertEquals("retry count: '2'", resp.body)
   }
