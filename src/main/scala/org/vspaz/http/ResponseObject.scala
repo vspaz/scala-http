@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import sttp.client3.{Identity, Response}
 
-abstract class ResponseObject(response: Identity[Response[String]]) {
+abstract class ResponseWrapper(response: Identity[Response[String]]) {
 
   val deserializer: JsonMapper = JsonMapper.builder().build()
   deserializer.registerModule(DefaultScalaModule)
