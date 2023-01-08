@@ -59,15 +59,17 @@ class Client(
     endpoint: String,
     headers: Map[String, String],
     payload: Any = None
-  ): Response[String] = {
-    var response: Identity[Response[String]] = null
+  ): Option[Response[String]] = {
+    var response: Option[Identity[Response[String]]] = None
     try
-      response = buildRequest(
-        method = method,
-        endpoint = endpoint,
-        headers = headers,
-        payload = Option(payload)
-      ).send(http)
+      response = Option(
+        buildRequest(
+          method = method,
+          endpoint = endpoint,
+          headers = headers,
+          payload = Option(payload)
+        ).send(http)
+      )
     catch {
       case e: sttp.client3.SttpClientException.ConnectException => logError(exception = e)
       case e: sttp.client3.SttpClientException.ReadException    => logError(exception = e)
@@ -84,14 +86,14 @@ class Client(
     payload: Any
   ): Response[String] = {
     for (attemptCount <- 1 to retryCount) {
-      val response: Identity[Response[String]] = timeIt(
+      val response: Option[Identity[Response[String]]] = timeIt(
         handleRequest(method = method, endpoint = endpoint, headers = headers, payload = payload)
       )
-      if (response != null) {
-        if (response.code.isSuccess)
-          return response
-        if (!retryOnErrors.contains(response.code.code))
-          throw new RuntimeException(s"can't retry on {${response.code.code}}")
+      if (response.isDefined) {
+        if (response.get.isSuccess)
+          return response.get
+        if (!retryOnErrors.contains(response.get.code.code))
+          throw new RuntimeException(s"can't retry on {${response.get.code.code}}")
       }
       Thread.sleep(delay * 1000 * attemptCount)
     }
