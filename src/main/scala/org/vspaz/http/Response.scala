@@ -1,5 +1,5 @@
 package org.vspaz.http
 
-class Response {
+class Response(statusCode: Int, body: String, headers: Map[String, String]) {
 
 }
