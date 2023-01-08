@@ -9,19 +9,20 @@ import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 
 trait Setup {
   var retryCount: Int = 0
+
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
     .synchronous
     .whenRequestMatchesPartial {
       case request if request.uri.path.endsWith(List("retry-request")) =>
+        retryCount += 1
         if (retryCount <= 1)
           throw new SttpClientException.ReadException(
             basicRequest.get(uri = uri"http://mock.api/retry-request"),
             new RuntimeException("failed to connect")
           )
-        else {
-          assertEquals("test-get-client", request.headers().headers("User-Agent").head)
-          Response(s"retry count: $retryCount", StatusCode.Ok)
-        }
+        else
+          assertEquals("test-retry-client", request.headers().headers("User-Agent").head)
+        Response(s"retry count: '$retryCount'", StatusCode.Ok)
       case request if request.uri.path.endsWith(List("connection-exception")) =>
         throw new SttpClientException.ConnectException(
           basicRequest.get(uri = uri"http://mock.api/connect-exception"),
@@ -224,5 +225,18 @@ class ClientTest extends AnyFunSuite with Setup {
         assertEquals(e.getMessage, "failed to complete request")
       case _: Throwable => new AssertionError
     }
+  }
+  test("Client.DoGetRetryRequestOk") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        userAgent = "test-retry-client",
+        delay = 2,
+        backend = Option(testHttpBackend)
+      )
+    val resp = client.doGet(endpoint = "/retry-request")
+    assertTrue(resp.isSuccess)
+    assertEquals("retry count: '2'", resp.body)
   }
 }
