@@ -163,4 +163,38 @@ class ClientTest extends AnyFunSuite with Setup {
       case _: Throwable => new AssertionError
     }
   }
+  test("Client.DoGetReadTimeoutFail") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        userAgent = "test-exception-client",
+        delay = 2,
+        backend = Option(testHttpBackend)
+      )
+    try client.doGet(endpoint = "/read-exception")
+    catch {
+      case e: RuntimeException =>
+        assertTrue(true)
+        assertEquals(e.getMessage, "failed to complete request")
+      case _: Throwable => new AssertionError
+    }
+  }
+  test("Client.DoGetTimeoutException") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        userAgent = "test-exception-client",
+        delay = 2,
+        backend = Option(testHttpBackend)
+      )
+    try client.doGet(endpoint = "/timeout-exception")
+    catch {
+      case e: RuntimeException =>
+        assertTrue(true)
+        assertEquals(e.getMessage, "failed to complete request")
+      case _: Throwable => new AssertionError
+    }
+  }
 }
