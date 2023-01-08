@@ -69,7 +69,7 @@ trait Setup {
           request.headers().headers("Content-Type").head
         )
         assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
-        Response(deserializer.writer.writeValueAsString(Map("test" -> "json")), StatusCode.Accepted)
+        Response(serializer.writer.writeValueAsString(Map("test" -> "json")), StatusCode.Accepted)
       case request if request.method.equals(Method.PATCH) =>
         assertTrue(request.uri.path.endsWith(List("test-patch")))
         assertEquals("test-patch-client", request.headers().headers("User-Agent").head)
