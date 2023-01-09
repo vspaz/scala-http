@@ -15,13 +15,13 @@ class ResponseWrapper(response: Response[String]) {
 
   def isOk(): Boolean = response.is200
 
-  def isSuccess: Boolean = response.isSuccess
+  def isSuccess(): Boolean = response.isSuccess
 
   def fromJson[T](valueType: Class[T]): T = deserializer.readValue(response.body, valueType)
 
-  def statusCode(): Int = response.code.code
+  def statusCode: Int = response.code.code
 
-  def asString(): String = response.body
+  override def toString(): String = response.body
 
-  def asBytes(): Array[Byte] = response.body.getBytes
+  def toBytes(): Array[Byte] = response.body.getBytes
 }
