@@ -10,9 +10,7 @@ import sttp.client3.testing.SttpBackendStub
 import sttp.model.{MediaType, Method, StatusCode}
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 
-import java.lang.System.currentTimeMillis
-
-trait Setup {
+trait MockServerResponses {
   var retryCount: Int = 0
 
   val serializer: JsonMapper = JsonMapper.builder().build()
@@ -24,31 +22,6 @@ trait Setup {
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
     .synchronous
     .whenRequestMatchesPartial {
-      case request if request.uri.path.endsWith(List("retry-request")) =>
-        retryCount += 1
-        if (retryCount <= 1)
-          throw new SttpClientException.ReadException(
-            basicRequest.get(uri = uri"http://mock.api/retry-request"),
-            new RuntimeException("failed to connect")
-          )
-        else
-          assertEquals("test-retry-client", request.headers().headers("User-Agent").head)
-        Response(s"retry count: '$retryCount'", StatusCode.Ok)
-      case request if request.uri.path.endsWith(List("connection-exception")) =>
-        throw new SttpClientException.ConnectException(
-          basicRequest.get(uri = uri"http://mock.api/connect-exception"),
-          new RuntimeException("failed to connect")
-        )
-      case request if request.uri.path.endsWith(List("read-exception")) =>
-        throw new SttpClientException.ConnectException(
-          basicRequest.get(uri = uri"http://mock.api/read-exception"),
-          new RuntimeException("failed to read from a socket")
-        )
-      case request if request.uri.path.endsWith(List("timeout-exception")) =>
-        throw new SttpClientException.TimeoutException(
-          basicRequest.get(uri = uri"http://mock.api/timeout-exception"),
-          new RuntimeException("timed occurred")
-        )
       case request if request.method.equals(Method.GET) =>
         assertTrue(request.uri.path.endsWith(List("test-get")))
         assertEquals("test-get-client", request.headers().headers("User-Agent").head)
@@ -91,7 +64,7 @@ trait Setup {
     }
 }
 
-class ClientTest extends AnyFunSuite with Setup {
+class ClientTest extends AnyFunSuite with MockServerResponses {
 
   test("Client.InitOk") {
     assertEquals(
