@@ -154,6 +154,9 @@ class ClientTest extends AnyFunSuite with Setup {
     assertTrue(resp.isSuccess)
 
     val decodedBody = deserializer.readValue(resp.body, classOf[Map[String, String]])
+    val response = new ResponseWrapper(resp)
+    val decodedValue = response.fromJson(classOf[Map[String, String]])
+    assertEquals(Map("test" -> "json"), decodedValue)
     assertEquals(Map("test" -> "json"), decodedBody)
   }
   test("Client.doPutOk") {

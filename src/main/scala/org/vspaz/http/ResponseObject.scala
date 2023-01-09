@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import sttp.client3.{Identity, Response}
 
-abstract class ResponseWrapper(response: Identity[Response[String]]) {
+class ResponseWrapper(response: Identity[Response[String]]) {
 
   val deserializer: JsonMapper = JsonMapper.builder().build()
   deserializer.registerModule(DefaultScalaModule)
@@ -12,7 +12,7 @@ abstract class ResponseWrapper(response: Identity[Response[String]]) {
 
   def isOk() = response.is200
 
-  def fromJson[T](valueType: T): T = deserializer.readValue(response.body, classOf[T])
+  def fromJson[T](valueType: Class[T]): T = deserializer.readValue(response.body, valueType)
 
   def statusCode() = response.code.code
 
