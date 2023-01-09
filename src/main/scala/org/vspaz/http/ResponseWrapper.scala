@@ -2,12 +2,12 @@ package org.vspaz.http
 
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import sttp.client3.{Identity, Response}
+import sttp.client3.Response
 import sttp.model.Header
 
 import scala.collection.immutable
 
-class ResponseWrapper(response: Identity[Response[String]]) {
+class ResponseWrapper(response: Response[String]) {
 
   val deserializer: JsonMapper = JsonMapper.builder().build()
   deserializer.registerModule(DefaultScalaModule)

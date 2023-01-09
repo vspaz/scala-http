@@ -84,14 +84,14 @@ class Client(
     endpoint: String,
     headers: Map[String, String],
     payload: Any
-  ): Response[String] = {
+  ): ResponseWrapper = {
     for (attemptCount <- 1 to retryCount) {
       val response: Option[Identity[Response[String]]] = timeIt(
         handleRequest(method = method, endpoint = endpoint, headers = headers, payload = payload)
       )
       if (response.isDefined) {
         if (response.get.isSuccess)
-          return response.get
+          return new ResponseWrapper(response.get)
         if (!retryOnErrors.contains(response.get.code.code))
           throw new RuntimeException(s"can't retry on {${response.get.code.code}}")
       }
@@ -101,28 +101,28 @@ class Client(
   }
 
   private def doRequest(
-    method: Method = Method.GET,
-    endpoint: String,
-    headers: Map[String, String],
-    payload: Any = None
-  ): Identity[Response[String]] = retryRequest(
+                         method: Method = Method.GET,
+                         endpoint: String,
+                         headers: Map[String, String],
+                         payload: Any = None
+                       ): ResponseWrapper = retryRequest(
     method = method,
     endpoint = endpoint,
     headers = headers,
     payload = payload
   )
 
-  def doGet(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
+  def doGet(endpoint: String, headers: Map[String, String] = Map()): ResponseWrapper =
     doRequest(method = Method.GET, endpoint = endpoint, headers = headers)
 
-  def doHead(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
+  def doHead(endpoint: String, headers: Map[String, String] = Map()): ResponseWrapper =
     doRequest(method = Method.HEAD, endpoint = endpoint, headers = headers)
 
   def doPost(
-    endpoint: String,
-    headers: Map[String, String] = Map(),
-    payload: Any = None
-  ): Identity[Response[String]] = doRequest(
+              endpoint: String,
+              headers: Map[String, String] = Map(),
+              payload: Any = None
+            ): ResponseWrapper = doRequest(
     method = Method.POST,
     endpoint = endpoint,
     headers = headers,
@@ -130,10 +130,10 @@ class Client(
   )
 
   def doPatch(
-    endpoint: String,
-    headers: Map[String, String] = Map(),
-    payload: Any = None
-  ): Identity[Response[String]] = doRequest(
+               endpoint: String,
+               headers: Map[String, String] = Map(),
+               payload: Any = None
+             ): ResponseWrapper = doRequest(
     method = Method.PATCH,
     endpoint = endpoint,
     headers = headers,
@@ -141,17 +141,17 @@ class Client(
   )
 
   def doPut(
-    endpoint: String,
-    headers: Map[String, String] = Map(),
-    payload: Any = None
-  ): Identity[Response[String]] = doRequest(
+             endpoint: String,
+             headers: Map[String, String] = Map(),
+             payload: Any = None
+           ): ResponseWrapper = doRequest(
     method = Method.PUT,
     endpoint = endpoint,
     headers = headers,
     payload = payload
   )
 
-  def doDelete(endpoint: String, headers: Map[String, String] = Map()): Identity[Response[String]] =
+  def doDelete(endpoint: String, headers: Map[String, String] = Map()): ResponseWrapper =
     doRequest(method = Method.DELETE, endpoint = endpoint, headers = headers)
 
   private def timeIt[T](expression: => T): T = {
