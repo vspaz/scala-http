@@ -108,8 +108,8 @@ class ClientTest extends AnyFunSuite with Setup {
         backend = Option(testHttpBackend)
       )
     val resp = client.doGet(endpoint = "/test-get")
-    assertTrue(resp.is200)
-    assertEquals("Ok", resp.body)
+    assertTrue(resp.isOk())
+    assertEquals("Ok", resp.asString())
   }
 
   test("Client.doHeadOk") {
@@ -121,8 +121,8 @@ class ClientTest extends AnyFunSuite with Setup {
         backend = Option(testHttpBackend)
       )
     val resp = client.doHead(endpoint = "/test-head")
-    assertTrue(resp.is200)
-    assertEquals("Ok", resp.body)
+    assertTrue(resp.isOk())
+    assertEquals("Ok", resp.asString())
   }
 
   test("Client.doDeleteOk") {
@@ -135,7 +135,7 @@ class ClientTest extends AnyFunSuite with Setup {
       )
     val resp = client.doDelete(endpoint = "/test-delete")
     assertTrue(resp.isSuccess)
-    assertEquals("accepted", resp.body)
+    assertEquals("accepted", resp.asString())
   }
 
   test("Client.doPostOk") {
@@ -152,11 +152,7 @@ class ClientTest extends AnyFunSuite with Setup {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess)
-
-    val decodedBody = deserializer.readValue(resp.body, classOf[Map[String, String]])
-    val response = new ResponseWrapper(resp)
-    val decodedValue = response.fromJson(classOf[Map[String, String]])
-    assertEquals(Map("test" -> "json"), decodedValue)
+    val decodedBody = resp.fromJson(classOf[Map[String, String]])
     assertEquals(Map("test" -> "json"), decodedBody)
   }
   test("Client.doPutOk") {
@@ -173,7 +169,7 @@ class ClientTest extends AnyFunSuite with Setup {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess)
-    assertEquals("accepted", resp.body)
+    assertEquals("accepted", resp.asString())
   }
 
   test("Client.doPatchOk") {
@@ -190,7 +186,7 @@ class ClientTest extends AnyFunSuite with Setup {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess)
-    assertEquals("accepted", resp.body)
+    assertEquals("accepted", resp.asString())
   }
   test("Client.DoGetConnectionTimeoutFail") {
     val testHttpBackend = getTestHttpBackendStub
@@ -260,6 +256,6 @@ class ClientTest extends AnyFunSuite with Setup {
     val requestTime = (currentTimeMillis() - start) / 1000
     assert(requestTime >= 1 && requestTime <= 2)
     assertTrue(resp.isSuccess)
-    assertEquals("retry count: '2'", resp.body)
+    assertEquals("retry count: '2'", resp.asString())
   }
 }
