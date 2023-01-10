@@ -24,6 +24,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
       )
     val resp = client.doGet(endpoint = "/test-get")
     assertTrue(resp.isOk())
+    assertEquals(200, resp.statusCode)
     assertEquals("Ok", resp.toString())
   }
 
@@ -37,6 +38,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
       )
     val resp = client.doHead(endpoint = "/test-head")
     assertTrue(resp.isOk())
+    assertEquals(200, resp.statusCode)
     assertEquals("Ok", resp.toString())
   }
 
@@ -50,6 +52,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
       )
     val resp = client.doDelete(endpoint = "/test-delete")
     assertTrue(resp.isSuccess())
+    assertEquals(202, resp.statusCode)
     assertEquals("accepted", resp.toString())
   }
 
@@ -84,6 +87,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess())
+    assertEquals(202, resp.statusCode)
     assertEquals("accepted", resp.toString())
   }
 
@@ -101,6 +105,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
       payload = Map("test" -> "json")
     )
     assertTrue(resp.isSuccess())
+    assertEquals(202, resp.statusCode)
     assertEquals("accepted", resp.toString())
   }
 }
