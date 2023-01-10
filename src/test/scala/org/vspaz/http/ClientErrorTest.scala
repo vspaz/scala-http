@@ -4,7 +4,7 @@ import java.lang.System.currentTimeMillis
 import org.scalatest.funsuite.AnyFunSuite
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 
-class ClientErrorTest extends AnyFunSuite with ErrorMockServerResponse {
+class ClientErrorTest extends AnyFunSuite with ServerErrorMockReponse {
     test("Client.DoGetConnectionTimeoutFail") {
       val testHttpBackend = getTestHttpBackendStub
       val client =

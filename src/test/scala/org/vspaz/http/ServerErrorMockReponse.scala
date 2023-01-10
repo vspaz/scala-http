@@ -7,7 +7,7 @@ import sttp.model.StatusCode
 import org.junit.jupiter.api.Assertions.assertEquals
 
 
-trait ErrorMockServerResponse {
+trait ServerErrorMockReponse {
   var retryCount: Int = 0
 
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
