@@ -1,10 +1,10 @@
-package org.vspaz.http
+package org.vspaz.http.setup
 
-import sttp.client3.{Identity, Response, SttpClientException, UriContext, basicRequest}
+import org.junit.jupiter.api.Assertions.assertEquals
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
+import sttp.client3.{Identity, Response, SttpClientException, UriContext, basicRequest}
 import sttp.model.StatusCode
-import org.junit.jupiter.api.Assertions.assertEquals
 
 
 trait ServerErrorMockReponse {

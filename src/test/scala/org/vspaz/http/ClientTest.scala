@@ -3,6 +3,7 @@ package org.vspaz.http
 import org.scalatest.funsuite.AnyFunSuite
 import sttp.model.MediaType
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
+import org.vspaz.http.setup.ServerMockResponse
 
 
 class ClientTest extends AnyFunSuite with ServerMockResponse {

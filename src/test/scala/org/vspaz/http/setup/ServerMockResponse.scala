@@ -1,14 +1,13 @@
-package org.vspaz.http
+package org.vspaz.http.setup
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-
-import sttp.client3.{Identity, Response, StringBody}
+import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
+import sttp.client3.{Identity, Response, StringBody}
 import sttp.model.{MediaType, Method, StatusCode}
-import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 
 trait ServerMockResponse {
   var retryCount: Int = 0

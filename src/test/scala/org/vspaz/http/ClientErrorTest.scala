@@ -3,6 +3,7 @@ package org.vspaz.http
 import java.lang.System.currentTimeMillis
 import org.scalatest.funsuite.AnyFunSuite
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
+import org.vspaz.http.setup.ServerErrorMockReponse
 
 class ClientErrorTest extends AnyFunSuite with ServerErrorMockReponse {
     test("Client.DoGetConnectionTimeoutFail") {
