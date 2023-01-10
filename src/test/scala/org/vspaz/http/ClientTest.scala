@@ -22,7 +22,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
         userAgent = "test-get-client",
         backend = Option(testHttpBackend)
       )
-    val resp = client.doGet(endpoint = "/test-get")
+    val resp = client.doGet(endpoint = "/test-get-method")
     assertTrue(resp.isOk())
     assertEquals(200, resp.statusCode)
     assertEquals("Ok", resp.toString())
@@ -36,7 +36,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
         userAgent = "test-head-client",
         backend = Option(testHttpBackend)
       )
-    val resp = client.doHead(endpoint = "/test-head")
+    val resp = client.doHead(endpoint = "/test-head-method")
     assertTrue(resp.isOk())
     assertEquals(200, resp.statusCode)
     assertEquals("Ok", resp.toString())
@@ -50,7 +50,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
         userAgent = "test-delete-client",
         backend = Option(testHttpBackend)
       )
-    val resp = client.doDelete(endpoint = "/test-delete")
+    val resp = client.doDelete(endpoint = "/test-delete-method")
     assertTrue(resp.isSuccess())
     assertEquals(202, resp.statusCode)
     assertEquals("accepted", resp.toString())
@@ -65,7 +65,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
         backend = Option(testHttpBackend)
       )
     val resp = client.doPost(
-      endpoint = "/test-post",
+      endpoint = "/test-post-method",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json_post_method")
     )
@@ -82,7 +82,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
         backend = Option(testHttpBackend)
       )
     val resp = client.doPut(
-      endpoint = "/test-put",
+      endpoint = "/test-put-method",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json_put_method")
     )
@@ -101,7 +101,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
         backend = Option(testHttpBackend)
       )
     val resp = client.doPatch(
-      endpoint = "/test-patch",
+      endpoint = "/test-patch-method",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json_patch_method")
     )
