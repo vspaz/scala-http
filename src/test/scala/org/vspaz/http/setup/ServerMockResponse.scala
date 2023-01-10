@@ -50,7 +50,7 @@ trait ServerMockResponse {
           request.headers().headers("Content-Type").head
         )
         assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
-        Response("accepted", StatusCode.Accepted)
+        Response(serializer.writer.writeValueAsString(Map("test" -> "json_patch_method")), StatusCode.Accepted)
       case request if request.method.equals(Method.PUT) =>
         assertTrue(request.uri.path.endsWith(List("test-put")))
         assertEquals("test-put-client", request.headers().headers("User-Agent").head)
