@@ -1,9 +1,5 @@
 package org.vspaz.http
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-
 import sttp.client3.{Identity, Response, SttpClientException, UriContext, basicRequest}
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
@@ -13,12 +9,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 
 trait ErrorMockServerResponse {
   var retryCount: Int = 0
-
-  val serializer: JsonMapper = JsonMapper.builder().build()
-  serializer.registerModule(DefaultScalaModule)
-
-  val deserializer: ObjectMapper = new ObjectMapper()
-  deserializer.registerModule(DefaultScalaModule)
 
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
     .synchronous

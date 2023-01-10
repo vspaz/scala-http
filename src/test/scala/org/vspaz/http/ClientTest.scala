@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import org.scalatest.funsuite.AnyFunSuite
-import sttp.client3.{Identity, Response, StringBody, SttpClientException, UriContext, basicRequest}
+import sttp.client3.{Identity, Response, StringBody}
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
 import sttp.model.{MediaType, Method, StatusCode}
@@ -161,5 +161,4 @@ class ClientTest extends AnyFunSuite with MockServerResponses {
     assertTrue(resp.isSuccess())
     assertEquals("accepted", resp.toString())
   }
-
 }
