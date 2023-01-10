@@ -22,19 +22,19 @@ trait ServerMockResponse {
     .synchronous
     .whenRequestMatchesPartial {
       case request if request.method.equals(Method.GET) =>
-        assertTrue(request.uri.path.endsWith(List("test-get")))
+        assertTrue(request.uri.path.endsWith(List("test-get-method")))
         assertEquals("test-get-client", request.headers().headers("User-Agent").head)
         Response("Ok", StatusCode.Ok)
       case request if request.method.equals(Method.HEAD) =>
-        assertTrue(request.uri.path.endsWith(List("test-head")))
+        assertTrue(request.uri.path.endsWith(List("test-head-method")))
         assertEquals("test-head-client", request.headers().headers("User-Agent").head)
         Response("Ok", StatusCode.Ok)
       case request if request.method.equals(Method.DELETE) =>
-        assertTrue(request.uri.path.endsWith(List("test-delete")))
+        assertTrue(request.uri.path.endsWith(List("test-delete-method")))
         assertEquals("test-delete-client", request.headers().headers("User-Agent").head)
         Response("accepted", StatusCode.Accepted)
       case request if request.method.equals(Method.POST) =>
-        assertTrue(request.uri.path.endsWith(List("test-post")))
+        assertTrue(request.uri.path.endsWith(List("test-post-method")))
         assertEquals("test-post-client", request.headers().headers("User-Agent").head)
         assertEquals(
           MediaType.ApplicationJson.toString(),
@@ -43,7 +43,7 @@ trait ServerMockResponse {
         assertEquals(StringBody("""{"test":"json_post_method"}""", "utf-8", MediaType.TextPlain), request.body)
         Response(serializer.writer.writeValueAsString(Map("test" -> "json_post_method")), StatusCode.Accepted)
       case request if request.method.equals(Method.PATCH) =>
-        assertTrue(request.uri.path.endsWith(List("test-patch")))
+        assertTrue(request.uri.path.endsWith(List("test-patch-method")))
         assertEquals("test-patch-client", request.headers().headers("User-Agent").head)
         assertEquals(
           MediaType.ApplicationJson.toString(),
@@ -52,7 +52,7 @@ trait ServerMockResponse {
         assertEquals(StringBody("""{"test":"json_patch_method"}""", "utf-8", MediaType.TextPlain), request.body)
         Response(serializer.writer.writeValueAsString(Map("test" -> "json_patch_method")), StatusCode.Accepted)
       case request if request.method.equals(Method.PUT) =>
-        assertTrue(request.uri.path.endsWith(List("test-put")))
+        assertTrue(request.uri.path.endsWith(List("test-put-method")))
         assertEquals("test-put-client", request.headers().headers("User-Agent").head)
         assertEquals(
           MediaType.ApplicationJson.toString(),
