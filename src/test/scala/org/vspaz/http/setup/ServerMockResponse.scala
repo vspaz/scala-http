@@ -59,6 +59,6 @@ trait ServerMockResponse {
           request.headers().headers("Content-Type").head
         )
         assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
-        Response("accepted", StatusCode.Accepted)
+        Response(serializer.writer.writeValueAsString(Map("test" -> "json_put_method")), StatusCode.Accepted)
     }
 }
