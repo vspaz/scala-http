@@ -49,7 +49,7 @@ trait ServerMockResponse {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
-        assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
+        assertEquals(StringBody("""{"test":"json_patch_method"}""", "utf-8", MediaType.TextPlain), request.body)
         Response(serializer.writer.writeValueAsString(Map("test" -> "json_patch_method")), StatusCode.Accepted)
       case request if request.method.equals(Method.PUT) =>
         assertTrue(request.uri.path.endsWith(List("test-put")))
@@ -58,7 +58,7 @@ trait ServerMockResponse {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
-        assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
+        assertEquals(StringBody("""{"test":"json_put_method"}""", "utf-8", MediaType.TextPlain), request.body)
         Response(serializer.writer.writeValueAsString(Map("test" -> "json_put_method")), StatusCode.Accepted)
     }
 }

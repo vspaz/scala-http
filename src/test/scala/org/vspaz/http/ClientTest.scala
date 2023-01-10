@@ -84,7 +84,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
     val resp = client.doPut(
       endpoint = "/test-put",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
-      payload = Map("test" -> "json")
+      payload = Map("test" -> "json_put_method")
     )
     assertTrue(resp.isSuccess())
     assertEquals(202, resp.statusCode)
@@ -103,7 +103,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
     val resp = client.doPatch(
       endpoint = "/test-patch",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
-      payload = Map("test" -> "json")
+      payload = Map("test" -> "json_patch_method")
     )
     assertTrue(resp.isSuccess())
     assertEquals(202, resp.statusCode)
