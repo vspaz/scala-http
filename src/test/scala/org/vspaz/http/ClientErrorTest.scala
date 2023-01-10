@@ -3,9 +3,9 @@ package org.vspaz.http
 import java.lang.System.currentTimeMillis
 import org.scalatest.funsuite.AnyFunSuite
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
-import org.vspaz.http.setup.ServerErrorMockReponse
+import org.vspaz.http.setup.ServerErrorMockResponse
 
-class ClientErrorTest extends AnyFunSuite with ServerErrorMockReponse {
+class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
     test("Client.DoGetConnectionTimeoutFail") {
       val testHttpBackend = getTestHttpBackendStub
       val client =

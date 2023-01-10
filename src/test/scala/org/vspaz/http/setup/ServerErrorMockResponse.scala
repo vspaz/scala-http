@@ -7,7 +7,7 @@ import sttp.client3.{Identity, Response, SttpClientException, UriContext, basicR
 import sttp.model.StatusCode
 
 
-trait ServerErrorMockReponse {
+trait ServerErrorMockResponse {
   var retryCount: Int = 0
 
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
