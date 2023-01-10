@@ -67,11 +67,11 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
     val resp = client.doPost(
       endpoint = "/test-post",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
-      payload = Map("test" -> "json")
+      payload = Map("test" -> "json_post_method")
     )
     assertTrue(resp.isSuccess())
     val decodedBody = resp.fromJson(classOf[Map[String, String]])
-    assertEquals(Map("test" -> "json"), decodedBody)
+    assertEquals(Map("test" -> "json_post_method"), decodedBody)
   }
   test("Client.doPutOk") {
     val testHttpBackend = getTestHttpBackendStub

@@ -40,8 +40,8 @@ trait ServerMockResponse {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
-        assertEquals(StringBody("""{"test":"json"}""", "utf-8", MediaType.TextPlain), request.body)
-        Response(serializer.writer.writeValueAsString(Map("test" -> "json")), StatusCode.Accepted)
+        assertEquals(StringBody("""{"test":"json_post_method"}""", "utf-8", MediaType.TextPlain), request.body)
+        Response(serializer.writer.writeValueAsString(Map("test" -> "json_post_method")), StatusCode.Accepted)
       case request if request.method.equals(Method.PATCH) =>
         assertTrue(request.uri.path.endsWith(List("test-patch")))
         assertEquals("test-patch-client", request.headers().headers("User-Agent").head)
