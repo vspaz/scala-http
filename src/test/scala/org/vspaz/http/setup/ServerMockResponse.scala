@@ -23,6 +23,17 @@ trait ServerMockResponse {
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
     .synchronous
     .whenRequestMatchesPartial {
+      case request if request.uri.path.endsWith(List("test-response-headers")) =>
+        Response(
+          body = "Ok",
+          code = StatusCode.Ok,
+          statusText = "Ok",
+          headers = Seq(
+            new Header("test1", "header1"),
+            new Header("test2", "header2"),
+            new Header("test3", "header3")
+          )
+        )
       case request if request.method.equals(Method.GET) =>
         assertTrue(request.uri.path.endsWith(List("test-get-method")))
         assertEquals("test-get-client", request.headers().headers("User-Agent").head)
