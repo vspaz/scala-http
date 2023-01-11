@@ -19,6 +19,10 @@ class ResponseWrapper(response: Response[String]) {
     getHeaders.toList
   }
 
+  def isClientError(): Boolean = {
+    response.isServerError
+  }
+
   def isOk(): Boolean = response.is200
 
   def isSuccess(): Boolean = response.isSuccess
