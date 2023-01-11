@@ -77,7 +77,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
     assertEquals(Map("test" -> "json_post_method"), decodedBody)
 
     assertEquals(1, resp.headers.size)
-    assertEquals(("foo", "bar"), resp.headers.head)
+    assertEquals(("test", "post"), resp.headers.head)
   }
   test("Client.doPutOk") {
     val testHttpBackend = getTestHttpBackendStub
@@ -115,5 +115,8 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
     assertEquals(202, resp.statusCode)
     val decodedBody = resp.fromJson(classOf[Map[String, String]])
     assertEquals(Map("test" -> "json_patch_method"), decodedBody)
+
+    assertEquals(1, resp.headers.size)
+    assertEquals(("test", "patch"), resp.headers.head)
   }
 }

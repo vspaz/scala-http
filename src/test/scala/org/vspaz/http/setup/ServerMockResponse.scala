@@ -60,7 +60,7 @@ trait ServerMockResponse {
           body = serializer.writer.writeValueAsString(Map("test" -> "json_post_method")),
           code = StatusCode.Accepted,
           statusText = "accepted",
-          headers = Seq(new Header("foo", "bar"))
+          headers = Seq(new Header("test", "post"))
         )
       case request if request.method.equals(Method.PATCH) =>
         assertTrue(request.uri.path.endsWith(List("test-patch-method")))
@@ -74,8 +74,10 @@ trait ServerMockResponse {
           request.body
         )
         Response(
-          serializer.writer.writeValueAsString(Map("test" -> "json_patch_method")),
-          StatusCode.Accepted
+          body = serializer.writer.writeValueAsString(Map("test" -> "json_patch_method")),
+          code = StatusCode.Accepted,
+          statusText = "accepted",
+          headers = Seq(new Header("test", "patch"))
         )
       case request if request.method.equals(Method.PUT) =>
         assertTrue(request.uri.path.endsWith(List("test-put-method")))
