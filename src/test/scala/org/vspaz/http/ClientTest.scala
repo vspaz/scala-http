@@ -131,9 +131,8 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
       )
     val resp = client.doGet(endpoint = "/test-response-headers")
     assertTrue(resp.isOk())
-    val allHeaders = resp.headers.toList
-    assertEquals(("header1", "value1"), allHeaders.head)
-    assertEquals(("header2", "value2"), allHeaders(1))
-    assertEquals(("header3", "value3"), allHeaders(2))
+    assertEquals(("header1", "value1"), resp.headers.head)
+    assertEquals(("header2", "value2"), resp.headers(1))
+    assertEquals(("header3", "value3"), resp.headers(2))
   }
 }
