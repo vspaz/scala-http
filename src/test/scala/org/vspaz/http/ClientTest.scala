@@ -26,6 +26,8 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
     assertTrue(resp.isOk())
     assertEquals(200, resp.statusCode)
     assertEquals("Ok", resp.toString())
+    assertEquals(1, resp.headers.size)
+    assertEquals(("test", "get"), resp.headers.head)
   }
 
   test("Client.doHeadOk") {
