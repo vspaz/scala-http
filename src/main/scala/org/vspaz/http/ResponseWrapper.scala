@@ -3,9 +3,7 @@ package org.vspaz.http
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import sttp.client3.Response
-import sttp.model.Header
 
-import scala.collection.immutable
 
 class ResponseWrapper(response: Response[String]) {
 
