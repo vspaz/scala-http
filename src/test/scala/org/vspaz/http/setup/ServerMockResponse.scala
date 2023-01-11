@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 import sttp.capabilities.WebSockets
 import sttp.client3.testing.SttpBackendStub
 import sttp.client3.{Identity, Response, StringBody}
-import sttp.model.{MediaType, Method, StatusCode}
+import sttp.model.{Header, MediaType, Method, StatusCode}
+
+import scala.collection.immutable.Seq
 
 trait ServerMockResponse {
   var retryCount: Int = 0
@@ -41,7 +43,13 @@ trait ServerMockResponse {
           request.headers().headers("Content-Type").head
         )
         assertEquals(StringBody("""{"test":"json_post_method"}""", "utf-8", MediaType.TextPlain), request.body)
-        Response(serializer.writer.writeValueAsString(Map("test" -> "json_post_method")), StatusCode.Accepted)
+        Response(
+          body=serializer.writer.writeValueAsString(Map("test" -> "json_post_method")),
+          code=StatusCode.Accepted,
+          statusText="accepted",
+          headers=Seq(new Header("foo", "bar")
+          )
+        )
       case request if request.method.equals(Method.PATCH) =>
         assertTrue(request.uri.path.endsWith(List("test-patch-method")))
         assertEquals("test-patch-client", request.headers().headers("User-Agent").head)
