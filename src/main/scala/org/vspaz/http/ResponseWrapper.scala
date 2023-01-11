@@ -11,8 +11,12 @@ class ResponseWrapper(response: Response[String]) {
 
   val deserializer: JsonMapper = JsonMapper.builder().build()
   deserializer.registerModule(DefaultScalaModule)
-  def headers: Seq[(String, String)] = {
+
+  private def getHeaders = {
     for (header <- response.headers) yield (header.name, header.value)
+  }
+  def headers: Seq[(String, String)] = {
+    getHeaders.toList
   }
 
   def isOk(): Boolean = response.is200
