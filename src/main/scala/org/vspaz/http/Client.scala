@@ -118,6 +118,9 @@ class Client(
   def doHead(endpoint: String, headers: Map[String, String] = Map()): ResponseWrapper =
     doRequest(method = Method.HEAD, endpoint = endpoint, headers = headers)
 
+  def doTrace(endpoint: String, headers: Map[String, String] = Map()): ResponseWrapper =
+    doRequest(method = Method.TRACE, endpoint = endpoint, headers = headers)
+
   def doPost(
               endpoint: String,
               headers: Map[String, String] = Map(),
