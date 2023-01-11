@@ -26,8 +26,10 @@ trait ServerErrorMockResponse {
         Response(s"retry count: '$retryCount'", StatusCode.Ok)
       case request if request.uri.path.endsWith(List("retry-request-on-http-error")) =>
         retryCountOnHttpError += 1
-        if (retryCountOnHttpError <= 1)
+        if (retryCountOnHttpError == 1)
           Response(s"retry count: '$retryCountOnHttpError'", StatusCode.ServiceUnavailable)
+        else if (retryCountOnHttpError == 2)
+          Response(s"retry count: '$retryCountOnHttpError'", StatusCode.InternalServerError)
         else
           Response(s"retry count: '$retryCountOnHttpError'", StatusCode.Ok)
       case request if request.uri.path.endsWith(List("connection-exception")) =>
