@@ -91,8 +91,10 @@ trait ServerMockResponse {
           request.body
         )
         Response(
-          serializer.writer.writeValueAsString(Map("test" -> "json_put_method")),
-          StatusCode.Accepted
+          body = serializer.writer.writeValueAsString(Map("test" -> "json_put_method")),
+          code = StatusCode.Accepted,
+          statusText = "accepted",
+          headers = Seq(new Header("test", "put"))
         )
     }
 }
