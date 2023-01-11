@@ -27,10 +27,10 @@ trait ServerMockResponse {
         assertTrue(request.uri.path.endsWith(List("test-get-method")))
         assertEquals("test-get-client", request.headers().headers("User-Agent").head)
         Response(
-          body="Ok",
+          body = "Ok",
           code = StatusCode.Ok,
           statusText = "Ok",
-          headers = Seq(new Header("test", "get")),
+          headers = Seq(new Header("test", "get"))
         )
       case request if request.method.equals(Method.HEAD) =>
         assertTrue(request.uri.path.endsWith(List("test-head-method")))
@@ -47,13 +47,15 @@ trait ServerMockResponse {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
-        assertEquals(StringBody("""{"test":"json_post_method"}""", "utf-8", MediaType.TextPlain), request.body)
+        assertEquals(
+          StringBody("""{"test":"json_post_method"}""", "utf-8", MediaType.TextPlain),
+          request.body
+        )
         Response(
-          body=serializer.writer.writeValueAsString(Map("test" -> "json_post_method")),
-          code=StatusCode.Accepted,
-          statusText="accepted",
-          headers=Seq(new Header("foo", "bar")
-          )
+          body = serializer.writer.writeValueAsString(Map("test" -> "json_post_method")),
+          code = StatusCode.Accepted,
+          statusText = "accepted",
+          headers = Seq(new Header("foo", "bar"))
         )
       case request if request.method.equals(Method.PATCH) =>
         assertTrue(request.uri.path.endsWith(List("test-patch-method")))
@@ -62,8 +64,14 @@ trait ServerMockResponse {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
-        assertEquals(StringBody("""{"test":"json_patch_method"}""", "utf-8", MediaType.TextPlain), request.body)
-        Response(serializer.writer.writeValueAsString(Map("test" -> "json_patch_method")), StatusCode.Accepted)
+        assertEquals(
+          StringBody("""{"test":"json_patch_method"}""", "utf-8", MediaType.TextPlain),
+          request.body
+        )
+        Response(
+          serializer.writer.writeValueAsString(Map("test" -> "json_patch_method")),
+          StatusCode.Accepted
+        )
       case request if request.method.equals(Method.PUT) =>
         assertTrue(request.uri.path.endsWith(List("test-put-method")))
         assertEquals("test-put-client", request.headers().headers("User-Agent").head)
@@ -71,7 +79,13 @@ trait ServerMockResponse {
           MediaType.ApplicationJson.toString(),
           request.headers().headers("Content-Type").head
         )
-        assertEquals(StringBody("""{"test":"json_put_method"}""", "utf-8", MediaType.TextPlain), request.body)
-        Response(serializer.writer.writeValueAsString(Map("test" -> "json_put_method")), StatusCode.Accepted)
+        assertEquals(
+          StringBody("""{"test":"json_put_method"}""", "utf-8", MediaType.TextPlain),
+          request.body
+        )
+        Response(
+          serializer.writer.writeValueAsString(Map("test" -> "json_put_method")),
+          StatusCode.Accepted
+        )
     }
 }
