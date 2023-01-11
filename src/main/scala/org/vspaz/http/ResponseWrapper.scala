@@ -23,6 +23,10 @@ class ResponseWrapper(response: Response[String]) {
     response.isServerError
   }
 
+  def isServerError(): Boolean = {
+    response.isServerError
+  }
+
   def isOk(): Boolean = response.is200
 
   def isSuccess(): Boolean = response.isSuccess
