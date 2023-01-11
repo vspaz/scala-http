@@ -29,9 +29,9 @@ trait ServerMockResponse {
           code = StatusCode.Ok,
           statusText = "Ok",
           headers = Seq(
-            new Header("test1", "header1"),
-            new Header("test2", "header2"),
-            new Header("test3", "header3")
+            new Header("header1", "value1"),
+            new Header("header2", "value2"),
+            new Header("header3", "value3")
           )
         )
       case request if request.method.equals(Method.GET) =>
