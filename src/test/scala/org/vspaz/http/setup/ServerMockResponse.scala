@@ -35,7 +35,12 @@ trait ServerMockResponse {
       case request if request.method.equals(Method.HEAD) =>
         assertTrue(request.uri.path.endsWith(List("test-head-method")))
         assertEquals("test-head-client", request.headers().headers("User-Agent").head)
-        Response("Ok", StatusCode.Ok)
+        Response(
+          body = "Ok",
+          code = StatusCode.Ok,
+          statusText = "Ok",
+          headers = Seq(new Header("test", "head"))
+        )
       case request if request.method.equals(Method.DELETE) =>
         assertTrue(request.uri.path.endsWith(List("test-delete-method")))
         assertEquals("test-delete-client", request.headers().headers("User-Agent").head)
