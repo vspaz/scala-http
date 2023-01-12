@@ -10,6 +10,7 @@ import sttp.model.StatusCode
 trait ServerErrorMockResponse {
   var retryCount: Int = 0
   var retryCountOnHttpError: Int = 0
+  var retryCountOnExceptions: Int = 0
 
   def getTestHttpBackendStub: SttpBackendStub[Identity, WebSockets] = SttpBackendStub
     .synchronous
@@ -32,6 +33,20 @@ trait ServerErrorMockResponse {
           Response(s"retry count: '$retryCountOnHttpError'", StatusCode.InternalServerError)
         else
           Response(s"retry count: '$retryCountOnHttpError'", StatusCode.Ok)
+      case request if request.uri.path.endsWith(List("retry-request-on-exceptions")) =>
+        retryCountOnExceptions += 1
+        if (retryCountOnExceptions == 1)
+          throw new SttpClientException.ConnectException(
+            basicRequest.get(uri = uri"http://mock.api/retry-request-on-exceptions"),
+            new RuntimeException("failed to connect")
+          )
+        else if (retryCountOnExceptions == 2)
+          throw new SttpClientException.ReadException(
+            basicRequest.get(uri = uri"http://mock.api/retry-request-on-exceptions"),
+            new RuntimeException("failed to read")
+          )
+        else
+          Response(s"retry count: '$retryCountOnExceptions'", StatusCode.Ok)
       case request if request.uri.path.endsWith(List("connection-exception")) =>
         throw new SttpClientException.ConnectException(
           basicRequest.get(uri = uri"http://mock.api/connect-exception"),
