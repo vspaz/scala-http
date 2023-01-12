@@ -17,6 +17,7 @@ class Client(
   token: Option[String] = None,
   retryCount: Int = 3,
   retryOnErrors: Set[Int] = Set(),
+  retryOnExceptions: Set[String] = Set(),
   delay: Int = 2,
   readTimeout: Int = 10,
   connectionTimeout: Int = 10,
@@ -71,9 +72,17 @@ class Client(
         ).send(http)
       )
     catch {
-      case e: sttp.client3.SttpClientException.ConnectException => logError(exception = e)
-      case e: sttp.client3.SttpClientException.ReadException    => logError(exception = e)
+      case e: sttp.client3.SttpClientException.ConnectException =>
+        logError(exception = e)
+        if (!retryOnExceptions.contains(e.getClass.getCanonicalName))
+          throw e
+      case e: sttp.client3.SttpClientException.ReadException    =>
+        logError(exception = e)
+        if (!retryOnExceptions.contains(e.getClass.getCanonicalName))
+          throw e
       case e: sttp.client3.SttpClientException.TimeoutException => logError(exception = e)
+        if (!retryOnExceptions.contains(e.getClass.getCanonicalName))
+          throw e
       case e: Throwable => logger.error(s"${e.getCause}: ${e.getMessage}")
     }
     response
