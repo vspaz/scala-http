@@ -55,6 +55,11 @@ class Client(
   private def logError(exception: Exception): Unit = logger
     .error(s"${exception.getCause}: ${exception.getMessage}")
 
+  private def raiseOnNonRetriableException(e: Throwable): Unit = {
+    if (!retryOnExceptions.contains(e.getClass.getCanonicalName))
+      throw e
+  }
+
   private def handleRequest(
     method: Method,
     endpoint: String,
@@ -74,16 +79,15 @@ class Client(
     catch {
       case e: sttp.client3.SttpClientException.ConnectException =>
         logError(exception = e)
-        if (!retryOnExceptions.contains(e.getClass.getCanonicalName))
-          throw e
+        raiseOnNonRetriableException(e)
       case e: sttp.client3.SttpClientException.ReadException    =>
         logError(exception = e)
-        if (!retryOnExceptions.contains(e.getClass.getCanonicalName))
-          throw e
+        raiseOnNonRetriableException(e)
       case e: sttp.client3.SttpClientException.TimeoutException => logError(exception = e)
-        if (!retryOnExceptions.contains(e.getClass.getCanonicalName))
-          throw e
-      case e: Throwable => logger.error(s"${e.getCause}: ${e.getMessage}")
+        raiseOnNonRetriableException(e)
+      case e: Throwable =>
+        logger.error(s"${e.getCause}: ${e.getMessage}")
+        raiseOnNonRetriableException(e)
     }
     response
   }
