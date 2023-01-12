@@ -85,6 +85,8 @@ class Client(
         raiseOnNonRetriableException(e)
       case e: sttp.client3.SttpClientException.TimeoutException => logError(exception = e)
         raiseOnNonRetriableException(e)
+      case e: RuntimeException => logError(exception = e)
+        raiseOnNonRetriableException(e)
       case e: Throwable =>
         logger.error(s"${e.getCause}: ${e.getMessage}")
         raiseOnNonRetriableException(e)
