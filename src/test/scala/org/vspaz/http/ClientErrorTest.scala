@@ -93,4 +93,22 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
     assertTrue(resp.isSuccess())
     assertEquals("retry count: '3'", resp.toString())
   }
+  test("Client.DoGetRetryRequestOnExceptionsErrorOk") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        delay = 1,
+        retryOnExceptions = Set(
+          "sttp.client3.SttpClientException.ConnectException",
+          "sttp.client3.SttpClientException.ReadException"
+
+        ),
+        backend = Option(testHttpBackend)
+      )
+    val start = currentTimeMillis()
+    val resp = client.doGet(endpoint = "/retry-request-on-exceptions")
+    assertTrue(resp.isSuccess())
+    assertEquals("retry count: '3'", resp.toString())
+  }
 }
