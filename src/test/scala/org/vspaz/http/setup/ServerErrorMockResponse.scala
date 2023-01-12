@@ -45,6 +45,11 @@ trait ServerErrorMockResponse {
             basicRequest.get(uri = uri"http://mock.api/retry-request-on-exceptions"),
             new RuntimeException("failed to read")
           )
+        else if (retryCountOnExceptions == 3)
+          throw new SttpClientException.TimeoutException(
+            basicRequest.get(uri = uri"http://mock.api/retry-request-on-exceptions"),
+            new RuntimeException("request timed out")
+          )
         else
           Response(s"retry count: '$retryCountOnExceptions'", StatusCode.Ok)
       case request if request.uri.path.endsWith(List("connection-exception")) =>
