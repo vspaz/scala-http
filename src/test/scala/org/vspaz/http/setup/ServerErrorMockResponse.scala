@@ -52,6 +52,8 @@ trait ServerErrorMockResponse {
           )
         else if (retryCountOnExceptions == 4)
           throw new RuntimeException("runtime error occurred")
+        else if (retryCountOnExceptions == 5)
+          throw new Throwable("runtime error occurred")
         else
           Response(s"retry count: '$retryCountOnExceptions'", StatusCode.Ok)
       case request if request.uri.path.endsWith(List("connection-exception")) =>
