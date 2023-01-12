@@ -65,6 +65,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
       val client =
         new Client(
           host = "http://mock.api",
+          retryOnExceptions = Set("sttp.client3.SttpClientException.ReadException"),
           userAgent = "test-retry-client",
           delay = 1,
           backend = Option(testHttpBackend)
