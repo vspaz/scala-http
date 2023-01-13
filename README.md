@@ -17,11 +17,17 @@ etc.
 ```scala
 package org.vspaz
 
+
+import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
+
 import org.vspaz.http.Client
 
 object Main {
   def main(args: Array[String]): Unit = {
     val resp = new Client().doGet("https://example.com/some-endpoint")
+    
+    assertTrue(resp.isOk())
+    assertEquals(200, resp.statusCode)
   }
 }
 ```
@@ -31,6 +37,9 @@ object Main {
 ```scala
 
 package org.vspaz
+
+
+import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 
 import org.vspaz.http.Client
 
@@ -53,7 +62,9 @@ object Main {
     )
   }
 
-  client.doGet("/some-endpoint")
+  val resp = client.doGet("/some-endpoint")
+  assertTrue(resp.isOk())
+  assertEquals(200, resp.statusCode)
 }
 
 ```
