@@ -12,7 +12,7 @@ etc.
 
 ### How to create a client
 
-#### Client with default parameters
+#### Init client with default parameters
 
 ```scala
 package org.vspaz
@@ -25,6 +25,8 @@ object Main {
   }
 }
 ```
+
+#### Init client with various parameters
 
 ```scala
 
