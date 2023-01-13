@@ -12,7 +12,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
         new Client(
           host = "http://mock.api",
           userAgent = "test-exception-client",
-          delay = 0,
+          retryDelay = 0,
           retryCount = 0,
           backend = Option(testHttpBackend)
         )
@@ -30,7 +30,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
         new Client(
           host = "http://mock.api",
           userAgent = "test-exception-client",
-          delay = 0,
+          retryDelay = 0,
           retryCount = 0,
           backend = Option(testHttpBackend)
         )
@@ -48,7 +48,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
         new Client(
           host = "http://mock.api",
           userAgent = "test-exception-client",
-          delay = 0,
+          retryDelay = 0,
           retryCount = 0,
           backend = Option(testHttpBackend)
         )
@@ -67,7 +67,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
           host = "http://mock.api",
           retryOnExceptions = Set("sttp.client3.SttpClientException.ReadException"),
           userAgent = "test-retry-client",
-          delay = 1,
+          retryDelay = 1,
           backend = Option(testHttpBackend)
         )
       val start = currentTimeMillis()
@@ -82,7 +82,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
     val client =
       new Client(
         host = "http://mock.api",
-        delay = 1,
+        retryDelay = 1,
         retryOnErrors = Set(503, 500),
         backend = Option(testHttpBackend)
       )
@@ -99,7 +99,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
       new Client(
         host = "http://mock.api",
         retryCount = 6,
-        delay = 1,
+        retryDelay = 1,
         retryOnExceptions = Set(
           "sttp.client3.SttpClientException.ConnectException",
           "sttp.client3.SttpClientException.ReadException",

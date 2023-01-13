@@ -18,7 +18,7 @@ class Client(
   retryCount: Int = 3,
   retryOnErrors: Set[Int] = Set(),
   retryOnExceptions: Set[String] = Set(),
-  delay: Int = 2,
+  retryDelay: Int = 2,
   readTimeout: Int = 10,
   connectionTimeout: Int = 10,
   backend: Option[SttpBackend[Identity, Any]] = None
@@ -110,7 +110,7 @@ class Client(
         if (!retryOnErrors.contains(response.get.code.code))
           throw new RuntimeException(s"can't retry on {${response.get.code.code}}")
       }
-      Thread.sleep(delay * 1000 * attemptCount)
+      Thread.sleep(retryDelay * 1000 * attemptCount)
     }
     throw new RuntimeException("failed to complete request")
   }

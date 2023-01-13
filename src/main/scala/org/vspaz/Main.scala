@@ -16,7 +16,7 @@ object Main {
         "java.lang.RuntimeException",
         "java.lang.Throwable",
       ),
-      delay = 1,
+      retryDelay = 1,
       connectionTimeout = 5,
       readTimeout = 10,
     )
