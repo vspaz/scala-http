@@ -1,5 +1,6 @@
 package org.vspaz
 
+import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 import org.vspaz.http.Client
 
 object Main {
@@ -24,5 +25,7 @@ object Main {
     client.doGet("/some-endpoint")
 
     val resp = new Client().doGet("https://example.com/some-endpoint")
+    assertTrue(resp.isOk())
+    assertEquals(200, resp.statusCode)
   }
 }
