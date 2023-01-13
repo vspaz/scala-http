@@ -77,6 +77,6 @@ object Main {
     payload = Map("header" -> "value")
   )
   assertTrue(resp.isSuccess())
+  val decodedBody = resp.fromJson(classOf[Map[String, String]])
 }
-
 ```
