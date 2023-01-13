@@ -14,10 +14,15 @@ object Main {
       retryOnExceptions = Set(
         "sttp.client3.SttpClientException.TimeoutException",
         "java.lang.RuntimeException",
-        "java.lang.Throwable"),
+        "java.lang.Throwable",
+      ),
       delay = 1,
       connectionTimeout = 5,
       readTimeout = 10,
     )
+
+    client.doGet("/some-endpoint")
+
+    val resp = new Client().doGet("https://example.com/some-endpoint")
   }
 }

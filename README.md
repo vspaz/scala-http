@@ -12,6 +12,20 @@ etc.
 
 ### How to create a client
 
+#### Client with default parameters
+
+```scala
+package org.vspaz
+
+import org.vspaz.http.Client
+
+object Main {
+  def main(args: Array[String]): Unit = {
+    val resp = new Client().doGet("https://example.com/some-endpoint")
+  }
+}
+```
+
 ```scala
 
 package org.vspaz
@@ -36,6 +50,8 @@ object Main {
       readTimeout = 10,
     )
   }
+
+  client.doGet("/some-endpoint")
 }
 
 ```
