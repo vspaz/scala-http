@@ -28,6 +28,7 @@ object Main {
     
     assertTrue(resp.isOk())
     assertEquals(200, resp.statusCode)
+    assertEquals(("header1", "value1"), resp.headers.head)
   }
 }
 ```
@@ -65,6 +66,7 @@ object Main {
   val resp = client.doGet("/some-endpoint")
   assertTrue(resp.isOk())
   assertEquals(200, resp.statusCode)
+  assertEquals(("header1", "value1"), resp.headers.head)
 }
 
 ```
