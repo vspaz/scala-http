@@ -9,3 +9,9 @@ it provides a simple configuration for:
 - extra helpers
 - logging
 etc.
+
+### How to create a client
+
+```scala
+
+```
