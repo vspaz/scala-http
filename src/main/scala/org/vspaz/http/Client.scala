@@ -22,6 +22,7 @@ class Client (
   retryDelay: Int = 2,
   readTimeout: Int = 10,
   connectionTimeout: Int = 10,
+  logger: Logger = LoggerFactory.getLogger(getClass.getName),
   backend: Option[SttpBackend[Identity, Any]] = None
 ) extends Serializable {
   private val responseTimeout = Duration(readTimeout, SECONDS)
@@ -30,7 +31,6 @@ class Client (
       SttpBackendOptions.connectionTimeout(Duration(connectionTimeout, SECONDS))
     )
   )
-  private val logger: Logger = LoggerFactory.getLogger(getClass.getName)
   private val mapper: ObjectMapper = new ObjectMapper()
   mapper.registerModule(DefaultScalaModule)
 
