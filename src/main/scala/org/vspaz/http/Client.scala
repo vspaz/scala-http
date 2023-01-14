@@ -9,7 +9,8 @@ import System.currentTimeMillis
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
-class Client(
+
+class Client (
   host: String = "",
   userAgent: String = "",
   basicAuthUser: String = "",
@@ -22,7 +23,7 @@ class Client(
   readTimeout: Int = 10,
   connectionTimeout: Int = 10,
   backend: Option[SttpBackend[Identity, Any]] = None
-) {
+) extends Serializable {
   private val responseTimeout = Duration(readTimeout, SECONDS)
   private val http = backend.getOrElse(
     HttpClientSyncBackend(options =
