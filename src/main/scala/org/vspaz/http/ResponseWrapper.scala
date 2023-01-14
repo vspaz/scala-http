@@ -15,7 +15,7 @@ class ResponseWrapper(response: Response[String]) {
   }
 
   def isClientError(): Boolean = {
-    response.isServerError
+    response.isClientError
   }
 
   def isServerError(): Boolean = {
