@@ -26,8 +26,16 @@ object Main {
     assertEquals("bar", decodedBody.args.get("foo"))
   }
 
+  private def doSimpleGetExampleWithHeaders(): Unit = {
+    val resp = new Client().doGet(endpoint = "https://httpbin.org/get", headers = Map("Header-Type" -> "header-value"))
+    assertTrue(resp.isOk())
+    val decodedBody = resp.fromJson(classOf[Response])
+    assertEquals("header-value", decodedBody.headers.get("Header-Type"))
+  }
+
   def main(args: Array[String]): Unit = {
     doSimpleGetExample()
     doSimpleGetExampleWithQueryParams()
+    doSimpleGetExampleWithHeaders()
   }
 }
