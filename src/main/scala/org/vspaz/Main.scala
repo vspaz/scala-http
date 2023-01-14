@@ -13,10 +13,21 @@ object Main {
   def doSimpleGetExample(): Unit = {
     val resp = new Client().doGet(endpoint="https://httpbin.org/get")
     assertTrue(resp.isOk())
+
     val decodedBody = resp.fromJson(classOf[Response])
     assertEquals("https://httpbin.org/get", decodedBody.url.get)
   }
+
+  def doSimpleGetExampleWithQueryParams() = {
+    val resp = new Client().doGet(endpoint = "https://httpbin.org/get", params = Map("foo" -> "bar"))
+    assertTrue(resp.isOk())
+    val decodedBody = resp.fromJson(classOf[Response])
+    assertEquals("https://httpbin.org/get?foo=bar", decodedBody.url.get)
+    assertEquals("bar", decodedBody.args.get("foo"))
+  }
+
   def main(args: Array[String]): Unit = {
     doSimpleGetExample()
+    doSimpleGetExampleWithQueryParams()
   }
 }
