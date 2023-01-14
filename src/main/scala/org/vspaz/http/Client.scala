@@ -9,6 +9,8 @@ import System.currentTimeMillis
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
+import scala.collection.mutable.ListBuffer
+
 
 class Client (
   host: String = "",
@@ -38,15 +40,13 @@ class Client (
     method: Method,
     endpoint: String,
     headers: Map[String, String] = Map(),
-    params: Option[Map[String, String]] = None,
+    params: Map[String, String] = Map(),
     payload: Option[Any] = None,
   ): RequestT[Identity, String, Any] = {
 
-    var queryParams: List[String] = List()
-    if (params.isDefined) {
-      for ((param, value) <- params.get) {
-        queryParams += s"$param=$value"
-      }
+    var queryParams: List[String] = List[String]()
+    if (params.nonEmpty) {
+      queryParams = (for ((param, value) <- params) yield s"$param=$value").toList
     }
     var queryParamString = ""
     if (queryParams.nonEmpty) {
@@ -83,6 +83,7 @@ class Client (
     method: Method,
     endpoint: String,
     headers: Map[String, String],
+    params: Map[String, String],
     payload: Any = None
   ): Option[Response[String]] = {
     var response: Option[Identity[Response[String]]] = None
@@ -92,6 +93,7 @@ class Client (
           method = method,
           endpoint = endpoint,
           headers = headers,
+          params = params,
           payload = Option(payload)
         ).send(http)
       )
@@ -117,11 +119,12 @@ class Client (
     method: Method,
     endpoint: String,
     headers: Map[String, String],
+    params: Map[String, String],
     payload: Any
   ): ResponseWrapper = {
     for (attemptCount <- 1 to retryCount) {
       val response: Option[Identity[Response[String]]] = timeIt(
-        handleRequest(method = method, endpoint = endpoint, headers = headers, payload = payload)
+        handleRequest(method = method, endpoint = endpoint, headers = headers, params = params, payload = payload)
       )
       if (response.isDefined) {
         if (response.get.isSuccess)
@@ -138,58 +141,67 @@ class Client (
                          method: Method = Method.GET,
                          endpoint: String,
                          headers: Map[String, String],
+                         params: Map[String, String],
                          payload: Any = None
                        ): ResponseWrapper = retryRequest(
     method = method,
     endpoint = endpoint,
     headers = headers,
+    params = params,
     payload = payload
   )
 
-  def doGet(endpoint: String, headers: Map[String, String] = Map()): ResponseWrapper =
-    doRequest(method = Method.GET, endpoint = endpoint, headers = headers)
+  def doGet(endpoint: String, headers: Map[String, String] = Map(), params: Map[String, String] = Map()): ResponseWrapper =
+    doRequest(method = Method.GET, endpoint = endpoint, headers = headers, params = params)
 
-  def doHead(endpoint: String, headers: Map[String, String] = Map()): ResponseWrapper =
-    doRequest(method = Method.HEAD, endpoint = endpoint, headers = headers)
+  def doHead(endpoint: String, headers: Map[String, String] = Map(), params: Map[String, String] = Map()): ResponseWrapper =
+    doRequest(method = Method.HEAD, endpoint = endpoint, headers = headers, params = params)
 
-  def doTrace(endpoint: String, headers: Map[String, String] = Map()): ResponseWrapper =
-    doRequest(method = Method.TRACE, endpoint = endpoint, headers = headers)
+  def doTrace(endpoint: String, headers: Map[String, String] = Map(), params: Map[String, String] = Map()): ResponseWrapper =
+    doRequest(method = Method.TRACE, endpoint = endpoint, headers = headers, params = params)
 
   def doPost(
               endpoint: String,
               headers: Map[String, String] = Map(),
+              params: Map[String, String] = Map(),
               payload: Any = None
             ): ResponseWrapper = doRequest(
     method = Method.POST,
     endpoint = endpoint,
     headers = headers,
+    params = params,
     payload = payload
   )
 
   def doPatch(
                endpoint: String,
                headers: Map[String, String] = Map(),
-               payload: Any = None
+               params: Map[String, String] = Map(),
+               payload: Any = None,
              ): ResponseWrapper = doRequest(
     method = Method.PATCH,
     endpoint = endpoint,
+    params = params,
     headers = headers,
+
     payload = payload
   )
 
   def doPut(
              endpoint: String,
              headers: Map[String, String] = Map(),
+             params: Map[String, String] = Map(),
              payload: Any = None
            ): ResponseWrapper = doRequest(
     method = Method.PUT,
     endpoint = endpoint,
     headers = headers,
+    params = params,
     payload = payload
   )
 
-  def doDelete(endpoint: String, headers: Map[String, String] = Map()): ResponseWrapper =
-    doRequest(method = Method.DELETE, endpoint = endpoint, headers = headers)
+  def doDelete(endpoint: String, headers: Map[String, String] = Map(), params: Map[String, String] = Map()): ResponseWrapper =
+    doRequest(method = Method.DELETE, endpoint = endpoint, headers = headers, params = params)
 
   private def timeIt[T](expression: => T): T = {
     val start = currentTimeMillis()
