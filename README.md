@@ -2,10 +2,10 @@
 
 a simple HTTP client that's simple to configure & use.
 it provides a simple configuration for:
-- json serialization & deserialization
-- basic auth
-- delayed retries on specific HTTP errors & HTTP exceptions
+- request retries on specific HTTP errors & exceptions
 - timeouts (connection, read, idle etc.)
+- basic & token auth
+- json serialization & deserialization
 - extra helpers
 - logging
 etc.
@@ -64,9 +64,6 @@ object Main {
   }
 
   var resp = client.doGet(endpoint="/some-endpoint")
-
-  // or simply
-  resp = new Client().doGet(endpoint="https://example.com/some-endpoint")
   assertTrue(resp.isOk())
   assertEquals(200, resp.statusCode)
 
