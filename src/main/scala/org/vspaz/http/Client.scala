@@ -38,12 +38,25 @@ class Client (
     method: Method,
     endpoint: String,
     headers: Map[String, String] = Map(),
+    params: Option[Map[String, String]] = None,
     payload: Option[Any] = None,
   ): RequestT[Identity, String, Any] = {
+
+    var queryParams: List[String] = List()
+    if (params.isDefined) {
+      for ((param, value) <- params.get) {
+        queryParams += s"$param=$value"
+      }
+    }
+    var queryParamString = ""
+    if (queryParams.nonEmpty) {
+      queryParamString = "?" + queryParams.mkString("&")
+    }
+
     var request = basicRequest
       .headers(headers ++ Map("User-Agent" -> userAgent))
       .readTimeout(responseTimeout)
-      .method(method, uri = uri"${host + endpoint}")
+      .method(method, uri = uri"${host + endpoint + queryParamString}")
     if (basicAuthUser != "" && basicUserPassword != "")
       request = request.auth.basic(basicAuthUser, basicUserPassword)
     if (token.isDefined)
