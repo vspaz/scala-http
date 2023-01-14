@@ -7,8 +7,7 @@ import sttp.client3.Response
 
 class ResponseWrapper(response: Response[String]) {
 
-  val deserializer: JsonMapper = JsonMapper.builder().build()
-  deserializer.registerModule(DefaultScalaModule)
+  val deserializer: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
 
   def headers = {
     (for (header <- response.headers) yield (header.name, header.value)).toList

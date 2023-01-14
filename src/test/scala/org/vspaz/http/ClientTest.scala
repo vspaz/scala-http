@@ -93,8 +93,8 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
     assertTrue(resp.isSuccess())
     decodedBody = resp.fromJson(classOf[Map[String, String]])
     assertEquals(Map("test" -> "json_post_method"), decodedBody)
-
   }
+
   test("Client.doPutOk") {
     val testHttpBackend = getTestHttpBackendStub
     val client =
