@@ -10,7 +10,7 @@ case class Response(
                      url: Option[String]) {}
 
 object Main {
-  def doSimpleGetExample(): Unit = {
+  private def doSimpleGetExample(): Unit = {
     val resp = new Client().doGet(endpoint="https://httpbin.org/get")
     assertTrue(resp.isOk())
 
@@ -18,7 +18,7 @@ object Main {
     assertEquals("https://httpbin.org/get", decodedBody.url.get)
   }
 
-  def doSimpleGetExampleWithQueryParams() = {
+  private def doSimpleGetExampleWithQueryParams(): Unit = {
     val resp = new Client().doGet(endpoint = "https://httpbin.org/get", params = Map("foo" -> "bar"))
     assertTrue(resp.isOk())
     val decodedBody = resp.fromJson(classOf[Response])
