@@ -38,7 +38,7 @@ class Client (
     method: Method,
     endpoint: String,
     headers: Map[String, String] = Map(),
-    payload: Option[Any] = None
+    payload: Option[Any] = None,
   ): RequestT[Identity, String, Any] = {
     var request = basicRequest
       .headers(headers ++ Map("User-Agent" -> userAgent))
@@ -48,8 +48,13 @@ class Client (
       request = request.auth.basic(basicAuthUser, basicUserPassword)
     if (token.isDefined)
       request = request.auth.bearer(token.get)
-    if (payload.isDefined)
-      request = request.body(mapper.writer.writeValueAsString(payload.get))
+    if (payload.isDefined) {
+      if (payload.get.isInstanceOf[String])
+        request = request.body(payload.get.toString)
+      else {
+        request = request.body(mapper.writer.writeValueAsString(payload.get))
+      }
+    }
     request.response(asStringAlways)
   }
 
