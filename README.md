@@ -10,70 +10,32 @@ it provides a simple configuration for:
 - logging
 etc.
 
-### How to create a client
+### How-to
 
-#### Init client with default parameters
+#### Do simple GET
 
 ```scala
 package org.vspaz
 
-
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
-
 import org.vspaz.http.Client
 
+case class Response(
+                     args: Option[Map[String, String]],
+                     headers: Option[Map[String, String]],
+                     origin: Option[String],
+                     url: Option[String]) {}
+
 object Main {
-  def main(args: Array[String]): Unit = {
-    val resp = new Client().doGet("https://example.com/some-endpoint")
-    
+  def doSimpleGetExample(): Unit = {
+    val resp = new Client().doGet(endpoint="https://httpbin.org/get")
     assertTrue(resp.isOk())
-    assertEquals(200, resp.statusCode)
-    assertEquals(("header1", "value1"), resp.headers.head)
+    
+    val decodedBody = resp.fromJson(classOf[Response])
+    assertEquals("https://httpbin.org/get", decodedBody.url.get)
   }
-}
-```
-
-#### Init client with various parameters
-
-```scala
-
-package org.vspaz
-
-
-import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
-
-import org.vspaz.http.Client
-
-object Main {
   def main(args: Array[String]): Unit = {
-    val client = new Client(
-      host= "https://example.com",
-      userAgent="client-name-and-version",
-      basicAuthUser="user",
-      basicUserPassword = "pass",
-      retryCount = 3,
-      retryOnErrors = Set(400, 500, 503),
-      retryOnExceptions = Set(
-        "sttp.client3.SttpClientException.TimeoutException",
-        "java.lang.RuntimeException",
-        "java.lang.Throwable"),
-      retryDelay = 1,
-      connectionTimeout = 5,
-      readTimeout = 10
-    )
+    doSimpleGetExample()
   }
-
-  var resp = client.doGet(endpoint="/some-endpoint")
-  assertTrue(resp.isOk())
-  assertEquals(200, resp.statusCode)
-
-  // POST
-  resp = client.doPost(
-    endpoint = "/some-endpoint",
-    headers = Map("Content-Type" -> "application/json"),
-    payload = Map("header" -> "value")
-  )
-  assertTrue(resp.isSuccess())
-  val decodedBody = resp.fromJson(classOf[Map[String, String]])
 }
 ```
