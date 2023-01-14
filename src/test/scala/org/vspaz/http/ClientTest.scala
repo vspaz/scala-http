@@ -1,5 +1,7 @@
 package org.vspaz.http
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import org.scalatest.funsuite.AnyFunSuite
 import sttp.model.MediaType
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
@@ -67,17 +69,31 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
         userAgent = "test-post-client",
         backend = Option(testHttpBackend)
       )
-    val resp = client.doPost(
+    var resp = client.doPost(
       endpoint = "/test-post-method",
       headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
       payload = Map("test" -> "json_post_method")
     )
     assertTrue(resp.isSuccess())
-    val decodedBody = resp.fromJson(classOf[Map[String, String]])
+    var decodedBody = resp.fromJson(classOf[Map[String, String]])
     assertEquals(Map("test" -> "json_post_method"), decodedBody)
 
     assertEquals(1, resp.headers.size)
     assertEquals(("test", "post"), resp.headers.head)
+
+    val mapper: ObjectMapper = new ObjectMapper()
+    mapper.registerModule(DefaultScalaModule)
+
+    resp = client.doPost(
+      endpoint = "/test-post-method",
+      headers = Map("Content-Type" -> MediaType.ApplicationJson.toString()),
+      payload = mapper.writer.writeValueAsString(Map("test" -> "json_post_method"))
+    )
+
+    assertTrue(resp.isSuccess())
+    decodedBody = resp.fromJson(classOf[Map[String, String]])
+    assertEquals(Map("test" -> "json_post_method"), decodedBody)
+
   }
   test("Client.doPutOk") {
     val testHttpBackend = getTestHttpBackendStub
