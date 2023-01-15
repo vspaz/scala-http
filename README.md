@@ -202,3 +202,18 @@ val resp = client.doGet(endpoint="/get", headers=Map("Authorization" -> s"Bearer
 assertTrue(resp.isOk())
 
 ```
+
+### Timeouts
+
+```scala
+val client = new Client(
+  host= "https://example.com",
+  userAgent="client-name-and-version",
+  connectionTimeout = 5,
+  readTimeout = 10,
+)
+
+val resp = client.doGet(endpoint="/get")
+assertTrue(resp.isOk())
+
+```
