@@ -77,31 +77,30 @@ println(resp.headers)
 assertEquals("application/json", resp.headers("content-type"))
 ```
 
-### Configuring the client
+### Configuring HTTP client
 
+### Retrying request on HTTP errors & exceptions
+
+* `retryCount[Int]`:  number of attempts to retry the request before it fails
+* `retryDelay [Int]`: incremental retry delay between requests
+* `retryOnErrors Set[Int]`: a set of status codes to retry on
+* `retryOnExceptions Set[Int]`: a st of exceptions to retry on
 ```scala
 import org.vspaz.http.Client
 
 val client = new Client(
-      host= "https://example.com",
+      host= "https://httpbin.org",
       userAgent="client-name-and-version",
-      basicAuthUser="user",
-      basicUserPassword = "pass",
       retryCount = 3,
+      retryDelay = 1,
       retryOnErrors = Set(400, 500, 503),
       retryOnExceptions = Set(
-        "sttp.client3.SttpClientException.TimeoutException",
         "java.lang.RuntimeException",
         "java.lang.Throwable",
       ),
-      retryDelay = 1,
-      connectionTimeout = 5,
-      readTimeout = 10,
     )
 
-val resp = new Client().doGet(endpoint="/get")
+val resp = client.doGet(endpoint="/get")
 assertTrue(resp.isOk())
-assertTrue(resp.isSuccess())
-assertEquals(200, resp.statusCode)
 
 ```
