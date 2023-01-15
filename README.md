@@ -107,6 +107,7 @@ assertTrue(resp.isOk())
 
 #### JSON serialization
 
+1. implicitly
 ```scala
 val client = new Client(
   host= "https://httpbin.org",
@@ -117,5 +118,25 @@ val resp = client.doPost(
   endpoint = "/post",
   headers = Map("Content-Type" -> "application/json"),
   payload = Map("key" -> "  value")
+)
+```
+2. explicitly
+
+```scala
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+
+val client = new Client(
+  host= "https://httpbin.org",
+  userAgent="client-name-and-version"
+)
+
+val mapper: ObjectMapper = new ObjectMapper()
+mapper.registerModule(DefaultScalaModule)
+
+val resp = client.doPost(
+  endpoint = "/post",
+  headers = MMap("Content-Type" -> "application/json"),
+  payload = mapper.writer.writeValueAsString(Map("key" -> "value"))
 )
 ```
