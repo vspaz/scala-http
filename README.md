@@ -67,3 +67,12 @@ assertTrue(resp.isOk())
 val decodedBody = resp.fromJson(classOf[Response])
 assertEquals("header-value", decodedBody.headers.get("Header-Type"))
 ```
+
+#### Get response headers
+```scala
+val resp = new Client().doGet(endpoint = "https://httpbin.org/get")
+assertTrue(resp.isOk())
+
+println(resp.headers)
+assertEquals("application/json", resp.headers("content-type"))
+```
