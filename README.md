@@ -171,6 +171,9 @@ val decodedBody = resp.fromJson(classOf[Response])
 ### Authentication
 
 1. Basic auth
+
+* `basicAuthUser`: user name
+* `basicUserPassword`: user password
 ```scala
  val client = new Client(
   host= "https://httpbin.org",
@@ -185,6 +188,8 @@ assertTrue(resp.isOk())
 ```
 
 2. Bearer token authentication
+
+* `token`: bearer token.
 
 ```scala
  val client = new Client(
@@ -204,6 +209,9 @@ assertTrue(resp.isOk())
 ```
 
 ### Timeouts
+
+* `connectionTimeout`: connection timeout (sec)
+* `readTimeout`: read timeout (sec)
 
 ```scala
 val client = new Client(
