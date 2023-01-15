@@ -177,10 +177,28 @@ val decodedBody = resp.fromJson(classOf[Response])
   userAgent="client-name-and-version",
   basicAuthUser="user",
   basicUserPassword = "pass",
+)
+
+val resp = client.doGet(endpoint="/get")
+assertTrue(resp.isOk())
+
+```
+
+2. Bearer token authentication
+
+```scala
+ val client = new Client(
+  host= "https://httpbin.org",
+  userAgent="client-name-and-version",
   token="iEtTTpwwPKcLNKSykKmN"
 )
 
 val resp = client.doGet(endpoint="/get")
+assertTrue(resp.isOk())
+
+// or
+val token = "iEtTTpwwPKcLNKSykKmN"
+val resp = client.doGet(endpoint="/get", headers=Map("Authorization" -> s"Bearer $token"))
 assertTrue(resp.isOk())
 
 ```
