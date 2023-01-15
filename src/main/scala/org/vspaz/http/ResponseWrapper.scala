@@ -4,13 +4,25 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import sttp.client3.Response
 
+import scala.collection.mutable
+
+
 
 class ResponseWrapper(response: Response[String]) {
 
   val deserializer: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
 
-  def headers = {
-    (for (header <- response.headers) yield (header.name, header.value)).toList
+  def headers: mutable.Map[String, String] = {
+    var headerToValues = scala.collection.mutable.Map[String, String]()
+    for (header <- response.headers) {
+      if (!headerToValues.contains(header.name))
+        headerToValues(header.name) = header.value
+      else {
+        val existingHeaderValue = headerToValues(header.name)
+        headerToValues(header.name) = s"$existingHeaderValue;${header.value}"
+      }
+    }
+    headerToValues
   }
 
   def isClientError(): Boolean = {
