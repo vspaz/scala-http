@@ -1,5 +1,6 @@
 package org.vspaz
 
+
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 import org.vspaz.http.Client
 
@@ -10,7 +11,16 @@ case class Response(
                      url: Option[String]) {}
 
 object Main {
+  // do simple GET request
   private def doSimpleGetExample(): Unit = {
+    val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+    assertTrue(resp.isOk())
+    assertTrue(resp.isSuccess())
+    assertEquals(200, resp.statusCode)
+  }
+
+  // deserialize JSON payload
+  private def doSimpleGetWithJsonDeserializationExample(): Unit = {
     val resp = new Client().doGet(endpoint="https://httpbin.org/get")
     assertTrue(resp.isOk())
 
@@ -18,24 +28,29 @@ object Main {
     assertEquals("https://httpbin.org/get", decodedBody.url.get)
   }
 
-  private def doSimpleGetExampleWithQueryParams(): Unit = {
+  // add query params to request
+  private def doSimpleGetWithQueryParamsExample(): Unit = {
     val resp = new Client().doGet(endpoint = "https://httpbin.org/get", params = Map("foo" -> "bar"))
     assertTrue(resp.isOk())
+
     val decodedBody = resp.fromJson(classOf[Response])
     assertEquals("https://httpbin.org/get?foo=bar", decodedBody.url.get)
     assertEquals("bar", decodedBody.args.get("foo"))
   }
 
-  private def doSimpleGetExampleWithHeaders(): Unit = {
+  // add headers to request
+  private def doSimpleGetWithHeadersExample(): Unit = {
     val resp = new Client().doGet(endpoint = "https://httpbin.org/get", headers = Map("Header-Type" -> "header-value"))
     assertTrue(resp.isOk())
+
     val decodedBody = resp.fromJson(classOf[Response])
     assertEquals("header-value", decodedBody.headers.get("Header-Type"))
   }
 
   def main(args: Array[String]): Unit = {
     doSimpleGetExample()
-    doSimpleGetExampleWithQueryParams()
-    doSimpleGetExampleWithHeaders()
+    doSimpleGetWithJsonDeserializationExample()
+    doSimpleGetWithQueryParamsExample()
+    doSimpleGetWithHeadersExample()
   }
 }

@@ -5,14 +5,14 @@ it provides a simple configuration for:
 - request retries on specific HTTP errors & exceptions
 - timeouts (connection, read, idle etc.)
 - basic & token auth
-- json serialization & deserialization
+- json serialization & deserialization out of the box
 - extra helpers
 - logging
 etc.
 
-### How-to
+### How-to:
 
-#### Do simple GET
+#### Use the client w/o any configuration
 
 ```scala
 package org.vspaz
@@ -26,35 +26,44 @@ case class Response(
                      headers: Option[Map[String, String]],
                      origin: Option[String],
                      url: Option[String]) {}
+```
 
-object Main {
-  private def doSimpleGetExample(): Unit = {
-    val resp = new Client().doGet(endpoint="https://httpbin.org/get")
-    assertTrue(resp.isOk())
+####  Do simple GET request
 
-    val decodedBody = resp.fromJson(classOf[Response])
-    assertEquals("https://httpbin.org/get", decodedBody.url.get)
-  }
+```scala
+val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+assertTrue(resp.isOk())
+assertTrue(resp.isSuccess())
+assertEquals(200, resp.statusCode)
+```
 
-  private def doSimpleGetExampleWithQueryParams(): Unit = {
-    val resp = new Client().doGet(endpoint = "https://httpbin.org/get", params = Map("foo" -> "bar"))
-    assertTrue(resp.isOk())
-    val decodedBody = resp.fromJson(classOf[Response])
-    assertEquals("https://httpbin.org/get?foo=bar", decodedBody.url.get)
-    assertEquals("bar", decodedBody.args.get("foo"))
-  }
+#### Deserialize JSON payload
 
-  private def doSimpleGetExampleWithHeaders(): Unit = {
-    val resp = new Client().doGet(endpoint = "https://httpbin.org/get", headers = Map("Header-Type" -> "header-value"))
-    assertTrue(resp.isOk())
-    val decodedBody = resp.fromJson(classOf[Response])
-    assertEquals("header-value", decodedBody.headers.get("Header-Type"))
-  }
+```scala
+val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+assertTrue(resp.isOk())
 
-  def main(args: Array[String]): Unit = {
-    doSimpleGetExample()
-    doSimpleGetExampleWithQueryParams()
-    doSimpleGetExampleWithHeaders()
-  }
-}
+val decodedBody = resp.fromJson(classOf[Response])
+assertEquals("https://httpbin.org/get", decodedBody.url.get)
+```
+
+#### Add query params to request
+
+```scala
+val resp = new Client().doGet(endpoint = "https://httpbin.org/get", params = Map("foo" -> "bar"))
+assertTrue(resp.isOk())
+    
+val decodedBody = resp.fromJson(classOf[Response])
+assertEquals("https://httpbin.org/get?foo=bar", decodedBody.url.get)
+assertEquals("bar", decodedBody.args.get("foo"))
+```
+
+#### Add headers to request
+
+```scala
+val resp = new Client().doGet(endpoint = "https://httpbin.org/get", headers = Map("Header-Type" -> "header-value"))
+assertTrue(resp.isOk())
+
+val decodedBody = resp.fromJson(classOf[Response])
+assertEquals("header-value", decodedBody.headers.get("Header-Type"))
 ```
