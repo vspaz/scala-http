@@ -107,7 +107,8 @@ assertTrue(resp.isOk())
 
 #### JSON serialization
 
-1. implicitly
+1. implicit json serialization
+
 ```scala
 val client = new Client(
   host= "https://httpbin.org",
@@ -120,7 +121,8 @@ val resp = client.doPost(
   payload = Map("key" -> "  value")
 )
 ```
-2. explicitly
+
+2. explicit json serialization
 
 ```scala
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -140,3 +142,29 @@ val resp = client.doPost(
   payload = mapper.writer.writeValueAsString(Map("key" -> "value"))
 )
 ```
+
+#### JSON deserialization
+
+```scala
+package org.vspaz
+
+
+import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
+import org.vspaz.http.Client
+
+case class Response(
+                     args: Option[Map[String, String]],
+                     headers: Option[Map[String, String]],
+                     origin: Option[String],
+                     url: Option[String]) {}
+
+val client = new Client(
+  host= "https://httpbin.org",
+  userAgent="client-name-and-version"
+)
+
+val resp = client.doGet(endpoint="/get")
+assertTrue(resp.isOk())
+val decodedBody = resp.fromJson(classOf[Response])
+```
+
