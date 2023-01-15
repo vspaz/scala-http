@@ -172,14 +172,15 @@ val decodedBody = resp.fromJson(classOf[Response])
 
 1. Basic auth
 
-* `basicAuthUser`: user name
+* `basicAuthUser`: username
 * `basicUserPassword`: user password
+
 ```scala
  val client = new Client(
   host= "https://httpbin.org",
   userAgent="client-name-and-version",
   basicAuthUser="user",
-  basicUserPassword = "pass",
+  basicUserPassword = "pass"
 )
 
 val resp = client.doGet(endpoint="/get")
@@ -192,7 +193,8 @@ assertTrue(resp.isOk())
 * `token`: bearer token.
 
 ```scala
- val client = new Client(
+
+val client = new Client(
   host= "https://httpbin.org",
   userAgent="client-name-and-version",
   token="iEtTTpwwPKcLNKSykKmN"
@@ -202,8 +204,8 @@ val resp = client.doGet(endpoint="/get")
 assertTrue(resp.isOk())
 
 // or
-val token = "iEtTTpwwPKcLNKSykKmN"
-val resp = client.doGet(endpoint="/get", headers=Map("Authorization" -> s"Bearer $token"))
+
+val resp = client.doGet(endpoint="/get", headers=Map("Authorization" -> s"Bearer iEtTTpwwPKcLNKSykKmN"))
 assertTrue(resp.isOk())
 
 ```
@@ -218,7 +220,7 @@ val client = new Client(
   host= "https://httpbin.org",
   userAgent="client-name-and-version",
   connectionTimeout = 5,
-  readTimeout = 10,
+  readTimeout = 10
 )
 
 val resp = client.doGet(endpoint="/get")
