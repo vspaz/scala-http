@@ -83,7 +83,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
       new Client(
         host = "http://mock.api",
         retryDelay = 1,
-        retryOnErrors = Set(503, 500),
+        retryOnStatusCodes = Set(503, 500),
         backend = Option(testHttpBackend)
       )
     val start = currentTimeMillis()

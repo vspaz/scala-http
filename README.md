@@ -83,7 +83,7 @@ assertEquals("application/json", resp.headers("content-type"))
 
 * `retryCount[Int]`:  number of attempts to retry the request before it fails
 * `retryDelay [Int]`: incremental retry delay between requests (sec)
-* `retryOnErrors Set[Int]`: a set of status codes to retry on
+* `retryOnStatusCodes Set[Int]`: a set of http status codes to retry on
 * `retryOnExceptions Set[Int]`: a st of exceptions to retry on
 ```scala
 import org.vspaz.http.Client
@@ -93,7 +93,7 @@ val client = new Client(
       userAgent="client-name-and-version",
       retryCount = 3,
       retryDelay = 1,
-      retryOnErrors = Set(400, 500, 503),
+      retryOnStatusCodes = Set(400, 500, 503),
       retryOnExceptions = Set(
         "java.lang.RuntimeException",
         "java.lang.Throwable"

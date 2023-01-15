@@ -19,7 +19,7 @@ class Client (
   basicUserPassword: String = "",
   token: Option[String] = None,
   retryCount: Int = 3,
-  retryOnErrors: Set[Int] = Set(),
+  retryOnStatusCodes: Set[Int] = Set(),
   retryOnExceptions: Set[String] = Set(),
   retryDelay: Int = 2,
   readTimeout: Int = 10,
@@ -129,7 +129,7 @@ class Client (
       if (response.isDefined) {
         if (response.get.isSuccess)
           return new ResponseWrapper(response.get)
-        if (!retryOnErrors.contains(response.get.code.code))
+        if (!retryOnStatusCodes.contains(response.get.code.code))
           throw new RuntimeException(s"can't retry on {${response.get.code.code}}")
       }
       Thread.sleep(retryDelay * 1000 * attemptCount)
