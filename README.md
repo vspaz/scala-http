@@ -82,7 +82,7 @@ assertEquals("application/json", resp.headers("content-type"))
 ### Retrying request on HTTP errors & exceptions
 
 * `retryCount[Int]`:  number of attempts to retry the request before it fails
-* `retryDelay [Int]`: incremental retry delay between requests
+* `retryDelay [Int]`: incremental retry delay between requests (sec)
 * `retryOnErrors Set[Int]`: a set of status codes to retry on
 * `retryOnExceptions Set[Int]`: a st of exceptions to retry on
 ```scala
@@ -215,7 +215,7 @@ assertTrue(resp.isOk())
 
 ```scala
 val client = new Client(
-  host= "https://example.com",
+  host= "https://httpbin.org",
   userAgent="client-name-and-version",
   connectionTimeout = 5,
   readTimeout = 10,
