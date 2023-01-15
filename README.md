@@ -76,3 +76,32 @@ assertTrue(resp.isOk())
 println(resp.headers)
 assertEquals("application/json", resp.headers("content-type"))
 ```
+
+### Configuring the client
+
+```scala
+import org.vspaz.http.Client
+
+val client = new Client(
+      host= "https://example.com",
+      userAgent="client-name-and-version",
+      basicAuthUser="user",
+      basicUserPassword = "pass",
+      retryCount = 3,
+      retryOnErrors = Set(400, 500, 503),
+      retryOnExceptions = Set(
+        "sttp.client3.SttpClientException.TimeoutException",
+        "java.lang.RuntimeException",
+        "java.lang.Throwable",
+      ),
+      retryDelay = 1,
+      connectionTimeout = 5,
+      readTimeout = 10,
+    )
+
+val resp = new Client().doGet(endpoint="/get")
+assertTrue(resp.isOk())
+assertTrue(resp.isSuccess())
+assertEquals(200, resp.statusCode)
+
+```
