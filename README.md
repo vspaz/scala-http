@@ -168,3 +168,19 @@ assertTrue(resp.isOk())
 val decodedBody = resp.fromJson(classOf[Response])
 ```
 
+### Authentication
+
+1. Basic auth
+```scala
+ val client = new Client(
+  host= "https://httpbin.org",
+  userAgent="client-name-and-version",
+  basicAuthUser="user",
+  basicUserPassword = "pass",
+  token="iEtTTpwwPKcLNKSykKmN"
+)
+
+val resp = client.doGet(endpoint="/get")
+assertTrue(resp.isOk())
+
+```
