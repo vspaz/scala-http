@@ -96,11 +96,26 @@ val client = new Client(
       retryOnErrors = Set(400, 500, 503),
       retryOnExceptions = Set(
         "java.lang.RuntimeException",
-        "java.lang.Throwable",
-      ),
+        "java.lang.Throwable"
+      )
     )
 
 val resp = client.doGet(endpoint="/get")
 assertTrue(resp.isOk())
 
+```
+
+#### JSON serialization
+
+```scala
+val client = new Client(
+  host= "https://httpbin.org",
+  userAgent="client-name-and-version"
+)
+
+val resp = client.doPost(
+  endpoint = "/post",
+  headers = Map("Content-Type" -> "application/json"),
+  payload = Map("key" -> "  value")
+)
 ```
