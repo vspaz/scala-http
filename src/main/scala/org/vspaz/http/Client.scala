@@ -98,9 +98,6 @@ class Client(
       case e: sttp.client3.SttpClientException.ReadException =>
         logError(exception = e)
         raiseOnNonRetriableException(e)
-      case e: sttp.client3.SttpClientException.TimeoutException =>
-        logError(exception = e)
-        raiseOnNonRetriableException(e)
       case e: RuntimeException =>
         logError(exception = e)
         raiseOnNonRetriableException(e)
