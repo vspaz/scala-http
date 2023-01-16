@@ -1,6 +1,6 @@
 # scala-http
 
-a simple HTTP client that's simple to configure & use.
+an HTTP client that's simple to configure & use.
 it provides a simple configuration for:
 - request retries on specific HTTP errors & exceptions
 - timeouts (connection, read, idle etc.)
@@ -13,7 +13,6 @@ etc.
 ### How-to:
 
 #### Use the client w/o any configuration
-
 
 ####  Do simple GET request
 
@@ -94,7 +93,7 @@ assertEquals("application/json", resp.headers("content-type"))
 
 ### Configuring HTTP client
 
-### Retrying request on HTTP errors & exceptions
+#### Retrying request on HTTP errors & exceptions
 
 * `retryCount[Int]`:  number of attempts to retry the request before it fails
 * `retryDelay [Int]`: incremental retry delay between requests (sec)
