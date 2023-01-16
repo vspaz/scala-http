@@ -9,10 +9,7 @@ import System.currentTimeMillis
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
-import scala.collection.mutable.ListBuffer
-
-
-class Client (
+class Client(
   host: String = "",
   userAgent: String = "",
   basicAuthUser: String = "",
@@ -41,17 +38,17 @@ class Client (
     endpoint: String,
     headers: Map[String, String] = Map(),
     params: Map[String, String] = Map(),
-    payload: Option[Any] = None,
+    payload: Option[Any] = None
   ): RequestT[Identity, String, Any] = {
 
     var queryParams: List[String] = List[String]()
-    if (params.nonEmpty) {
-      queryParams = (for ((param, value) <- params) yield s"$param=$value").toList
-    }
+    if (params.nonEmpty)
+      queryParams =
+        (for ((param, value) <- params)
+          yield s"$param=$value").toList
     var queryParamString = ""
-    if (queryParams.nonEmpty) {
+    if (queryParams.nonEmpty)
       queryParamString = "?" + queryParams.mkString("&")
-    }
 
     var request = basicRequest
       .headers(headers ++ Map("User-Agent" -> userAgent))
@@ -61,23 +58,20 @@ class Client (
       request = request.auth.basic(basicAuthUser, basicUserPassword)
     if (token.isDefined)
       request = request.auth.bearer(token.get)
-    if (payload.isDefined) {
+    if (payload.isDefined)
       if (payload.get.isInstanceOf[String])
         request = request.body(payload.get.toString)
-      else {
+      else
         request = request.body(mapper.writer.writeValueAsString(payload.get))
-      }
-    }
     request.response(asStringAlways)
   }
 
   private def logError(exception: Exception): Unit = logger
     .error(s"${exception.getCause}: ${exception.getMessage}")
 
-  private def raiseOnNonRetriableException(e: Throwable): Unit = {
+  private def raiseOnNonRetriableException(e: Throwable): Unit =
     if (!retryOnExceptions.contains(e.getClass.getCanonicalName))
       throw e
-  }
 
   private def handleRequest(
     method: Method,
@@ -101,12 +95,14 @@ class Client (
       case e: sttp.client3.SttpClientException.ConnectException =>
         logError(exception = e)
         raiseOnNonRetriableException(e)
-      case e: sttp.client3.SttpClientException.ReadException    =>
+      case e: sttp.client3.SttpClientException.ReadException =>
         logError(exception = e)
         raiseOnNonRetriableException(e)
-      case e: sttp.client3.SttpClientException.TimeoutException => logError(exception = e)
+      case e: sttp.client3.SttpClientException.TimeoutException =>
+        logError(exception = e)
         raiseOnNonRetriableException(e)
-      case e: RuntimeException => logError(exception = e)
+      case e: RuntimeException =>
+        logError(exception = e)
         raiseOnNonRetriableException(e)
       case e: Throwable =>
         logger.error(s"${e.getCause}: ${e.getMessage}")
@@ -124,7 +120,13 @@ class Client (
   ): ResponseWrapper = {
     for (attemptCount <- 1 to retryCount) {
       val response: Option[Identity[Response[String]]] = timeIt(
-        handleRequest(method = method, endpoint = endpoint, headers = headers, params = params, payload = payload)
+        handleRequest(
+          method = method,
+          endpoint = endpoint,
+          headers = headers,
+          params = params,
+          payload = payload
+        )
       )
       if (response.isDefined) {
         if (response.get.isSuccess)
@@ -138,12 +140,12 @@ class Client (
   }
 
   private def doRequest(
-                         method: Method = Method.GET,
-                         endpoint: String,
-                         headers: Map[String, String],
-                         params: Map[String, String],
-                         payload: Any = None
-                       ): ResponseWrapper = retryRequest(
+    method: Method = Method.GET,
+    endpoint: String,
+    headers: Map[String, String],
+    params: Map[String, String],
+    payload: Any = None
+  ): ResponseWrapper = retryRequest(
     method = method,
     endpoint = endpoint,
     headers = headers,
@@ -151,21 +153,45 @@ class Client (
     payload = payload
   )
 
-  def doGet(endpoint: String, headers: Map[String, String] = Map(), params: Map[String, String] = Map()): ResponseWrapper =
-    doRequest(method = Method.GET, endpoint = endpoint, headers = headers, params = params)
+  def doGet(
+    endpoint: String,
+    headers: Map[String, String] = Map(),
+    params: Map[String, String] = Map()
+  ): ResponseWrapper = doRequest(
+    method = Method.GET,
+    endpoint = endpoint,
+    headers = headers,
+    params = params
+  )
 
-  def doHead(endpoint: String, headers: Map[String, String] = Map(), params: Map[String, String] = Map()): ResponseWrapper =
-    doRequest(method = Method.HEAD, endpoint = endpoint, headers = headers, params = params)
+  def doHead(
+    endpoint: String,
+    headers: Map[String, String] = Map(),
+    params: Map[String, String] = Map()
+  ): ResponseWrapper = doRequest(
+    method = Method.HEAD,
+    endpoint = endpoint,
+    headers = headers,
+    params = params
+  )
 
-  def doTrace(endpoint: String, headers: Map[String, String] = Map(), params: Map[String, String] = Map()): ResponseWrapper =
-    doRequest(method = Method.TRACE, endpoint = endpoint, headers = headers, params = params)
+  def doTrace(
+    endpoint: String,
+    headers: Map[String, String] = Map(),
+    params: Map[String, String] = Map()
+  ): ResponseWrapper = doRequest(
+    method = Method.TRACE,
+    endpoint = endpoint,
+    headers = headers,
+    params = params
+  )
 
   def doPost(
-              endpoint: String,
-              headers: Map[String, String] = Map(),
-              params: Map[String, String] = Map(),
-              payload: Any = None
-            ): ResponseWrapper = doRequest(
+    endpoint: String,
+    headers: Map[String, String] = Map(),
+    params: Map[String, String] = Map(),
+    payload: Any = None
+  ): ResponseWrapper = doRequest(
     method = Method.POST,
     endpoint = endpoint,
     headers = headers,
@@ -174,25 +200,24 @@ class Client (
   )
 
   def doPatch(
-               endpoint: String,
-               headers: Map[String, String] = Map(),
-               params: Map[String, String] = Map(),
-               payload: Any = None,
-             ): ResponseWrapper = doRequest(
+    endpoint: String,
+    headers: Map[String, String] = Map(),
+    params: Map[String, String] = Map(),
+    payload: Any = None
+  ): ResponseWrapper = doRequest(
     method = Method.PATCH,
     endpoint = endpoint,
     params = params,
     headers = headers,
-
     payload = payload
   )
 
   def doPut(
-             endpoint: String,
-             headers: Map[String, String] = Map(),
-             params: Map[String, String] = Map(),
-             payload: Any = None
-           ): ResponseWrapper = doRequest(
+    endpoint: String,
+    headers: Map[String, String] = Map(),
+    params: Map[String, String] = Map(),
+    payload: Any = None
+  ): ResponseWrapper = doRequest(
     method = Method.PUT,
     endpoint = endpoint,
     headers = headers,
@@ -200,8 +225,16 @@ class Client (
     payload = payload
   )
 
-  def doDelete(endpoint: String, headers: Map[String, String] = Map(), params: Map[String, String] = Map()): ResponseWrapper =
-    doRequest(method = Method.DELETE, endpoint = endpoint, headers = headers, params = params)
+  def doDelete(
+    endpoint: String,
+    headers: Map[String, String] = Map(),
+    params: Map[String, String] = Map()
+  ): ResponseWrapper = doRequest(
+    method = Method.DELETE,
+    endpoint = endpoint,
+    headers = headers,
+    params = params
+  )
 
   private def timeIt[T](expression: => T): T = {
     val start = currentTimeMillis()
