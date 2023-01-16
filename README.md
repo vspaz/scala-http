@@ -243,6 +243,44 @@ assertTrue(resp.isOk())
 
 ```
 
+### Full Client configuration
+
+all parameters are optional
+
+* `host`: String
+* `userAgent`: String
+* `basicAuthUser`: String
+* `basicUserPassword`: String 
+* `token` Option[String]
+* `retryCount`Int 
+* `retryOnStatusCodes`Set[Int]
+* `retryOnExceptions`Set[String]
+* `retryDelay`Int
+* `readTimeout`Int
+* `connectionTimeout`Int
+* `logger`: Logger
+
+```scala
+import org.vspaz.http.Client
+
+val client = new Client(
+  host= "https://httpbin.org",
+  userAgent="client-name-and-version",
+  basicAuthUser="username",
+  basicUserPassword="pass",
+  token="",
+  retryCount=3,
+  retryDelay = 1,
+  retryOnStatusCodes = Set(400, 500, 503),
+  retryOnExceptions = Set(
+    "java.lang.RuntimeException",
+    "java.lang.Throwable"
+  ),
+  connectionTimeout = 5,
+  readTimeout = 10
+)
+```
+
 ### Response object
 ```scala
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
