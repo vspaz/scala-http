@@ -247,18 +247,18 @@ assertTrue(resp.isOk())
 
 all parameters are optional
 
-* `host`: String
-* `userAgent`: String
-* `basicAuthUser`: String
-* `basicUserPassword`: String 
-* `token` Option[String]
-* `retryCount`Int 
-* `retryOnStatusCodes`Set[Int]
-* `retryOnExceptions`Set[String]
-* `retryDelay`Int
-* `readTimeout`Int
-* `connectionTimeout`Int
-* `logger`: Logger
+* `host`[String]: default is an empty string
+* `userAgent`[String]:
+* `basicAuthUser`[String]:
+* `basicUserPassword`[String]:  
+* `token`[Option[String]]: 
+* `retryCount`[Int]: default = 0
+* `retryOnStatusCodes`[Set[Int]]: default is an empty set
+* `retryOnExceptions`[Set[String]]: default is an empty set
+* `retryDelay`[Int]: default = 0
+* `readTimeout`[Int]: default = 10 sec
+* `connectionTimeout`[Int]: default = 10 sec
+* `logger`[Logger]:
 
 ```scala
 import org.vspaz.http.Client
