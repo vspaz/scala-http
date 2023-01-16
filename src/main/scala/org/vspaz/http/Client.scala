@@ -21,7 +21,7 @@ class Client(
   retryDelay: Int = 2,
   readTimeout: Int = 10,
   connectionTimeout: Int = 10,
-  logger: Logger = LoggerFactory.getLogger(getClass.getName),
+  logger: Logger = LoggerFactory.getLogger("client"),
   backend: Option[SttpBackend[Identity, Any]] = None
 ) extends Serializable {
   private val responseTimeout = Duration(readTimeout, SECONDS)
