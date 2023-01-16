@@ -242,3 +242,17 @@ val resp = client.doGet(endpoint="/get")
 assertTrue(resp.isOk())
 
 ```
+
+### Response object
+```scala
+import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
+import org.vspaz.http.Client
+
+val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+assertTrue(resp.isOk())
+assertTrue(resp.isSuccess())
+assertEquals(200, resp.statusCode)
+println(resp.asString())
+println(resp.asBytes())
+println(resp.headers)
+```
