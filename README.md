@@ -14,10 +14,22 @@ etc.
 
 #### Use the client w/o any configuration
 
+
+####  Do simple GET request
+
 ```scala
-package org.vspaz
+import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
+import org.vspaz.http.Client
 
+val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+assertTrue(resp.isOk())
+assertTrue(resp.isSuccess())
+assertEquals(200, resp.statusCode)
+```
 
+#### Deserialize JSON payload
+
+```scala
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 import org.vspaz.http.Client
 
@@ -28,23 +40,26 @@ case class Response(
                      url: Option[String]) {}
 ```
 
-####  Do simple GET request
-
-```scala
-val resp = new Client().doGet(endpoint="https://httpbin.org/get")
-assertTrue(resp.isOk())
-assertTrue(resp.isSuccess())
-assertEquals(200, resp.statusCode)
-```
-
-#### Deserialize JSON payload
-
 ```scala
 val resp = new Client().doGet(endpoint="https://httpbin.org/get")
 assertTrue(resp.isOk())
 
 val decodedBody = resp.fromJson(classOf[Response])
 assertEquals("https://httpbin.org/get", decodedBody.url.get)
+```
+
+or if you need more control, you can get response as bytes or string, 
+and deserialize it with any Scala/Java frameworks e.g.
+
+```scala
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+
+val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+assertTrue(resp.isOk())
+
+val mapper: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
+val decodedBody = mapper.readValue(response.toString(), classOf[Response])
 ```
 
 #### Add query params to request
