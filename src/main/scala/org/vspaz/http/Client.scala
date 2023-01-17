@@ -14,7 +14,7 @@ class Client(
   userAgent: String = "",
   basicAuthUser: String = "",
   basicUserPassword: String = "",
-  token: Option[String] = None,
+  token: String = "",
   retryCount: Int = 3,
   retryOnStatusCodes: Set[Int] = Set(),
   retryOnExceptions: Set[String] = Set(),
@@ -56,8 +56,8 @@ class Client(
       .method(method, uri = uri"${host + endpoint + queryParamString}")
     if (basicAuthUser != "" && basicUserPassword != "")
       request = request.auth.basic(basicAuthUser, basicUserPassword)
-    if (token.isDefined)
-      request = request.auth.bearer(token.get)
+    if (!token.equals(""))
+      request = request.auth.bearer(token)
     if (payload.isDefined)
       if (payload.get.isInstanceOf[String])
         request = request.body(payload.get.toString)
