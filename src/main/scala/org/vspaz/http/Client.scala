@@ -54,7 +54,7 @@ class Client(
       .headers(headers ++ Map("User-Agent" -> userAgent))
       .readTimeout(responseTimeout)
       .method(method, uri = uri"${host + endpoint + queryParamString}")
-    if (basicAuthUser != "" && basicUserPassword != "")
+    if (!basicAuthUser.equals("") && !basicUserPassword.equals(""))
       request = request.auth.basic(basicAuthUser, basicUserPassword)
     if (!token.equals(""))
       request = request.auth.bearer(token)
