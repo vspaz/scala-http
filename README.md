@@ -250,7 +250,7 @@ all parameters are optional
 * `userAgent`[String]:
 * `basicAuthUser`[String]:
 * `basicUserPassword`[String]:  
-* `token`[Option[String]]: 
+* `token`[String]: 
 * `retryCount`[Int]: default = 0
 * `retryOnStatusCodes`[Set[Int]]: default is an empty set
 * `retryOnExceptions`[Set[String]]: default is an empty set
