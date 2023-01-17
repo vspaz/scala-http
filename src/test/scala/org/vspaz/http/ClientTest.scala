@@ -140,11 +140,7 @@ class ClientTest extends AnyFunSuite with ServerMockResponse {
   }
   test("TestResponseHeadersOk") {
     val testHttpBackend = getTestHttpBackendStub
-    val client =
-      new Client(
-        host = "http://mock.api",
-        backend = Option(testHttpBackend)
-      )
+    val client = new Client(host = "http://mock.api", backend = Option(testHttpBackend))
     val resp = client.doGet(endpoint = "/test-response-headers")
     assertTrue(resp.isOk())
     assertEquals("value1", resp.headers("header1"))

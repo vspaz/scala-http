@@ -20,7 +20,7 @@ etc.
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 import org.vspaz.http.Client
 
-val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+val resp = new Client().doGet(endpoint = "https://httpbin.org/get")
 assertTrue(resp.isOk())
 assertTrue(resp.isSuccess())
 assertEquals(200, resp.statusCode)
@@ -40,7 +40,7 @@ case class Response(
 ```
 
 ```scala
-val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+val resp = new Client().doGet(endpoint = "https://httpbin.org/get")
 assertTrue(resp.isOk())
 
 val decodedBody = resp.fromJson(classOf[Response])
@@ -54,7 +54,7 @@ and deserialize it with any Scala/Java frameworks e.g.
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
-val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+val resp = new Client().doGet(endpoint = "https://httpbin.org/get")
 assertTrue(resp.isOk())
 
 val mapper: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
@@ -103,8 +103,8 @@ assertEquals("application/json", resp.headers("content-type"))
 import org.vspaz.http.Client
 
 val client = new Client(
-      host= "https://httpbin.org",
-      userAgent="client-name-and-version",
+      host = "https://httpbin.org",
+      userAgent = "client-name-and-version",
       retryCount = 3,
       retryDelay = 1,
       retryOnStatusCodes = Set(400, 500, 503),
@@ -114,7 +114,7 @@ val client = new Client(
       )
     )
 
-val resp = client.doGet(endpoint="/get")
+val resp = client.doGet(endpoint = "/get")
 assertTrue(resp.isOk())
 
 ```
@@ -125,8 +125,8 @@ assertTrue(resp.isOk())
 
 ```scala
 val client = new Client(
-  host= "https://httpbin.org",
-  userAgent="client-name-and-version"
+  host = "https://httpbin.org",
+  userAgent = "client-name-and-version"
 )
 
 val resp = client.doPost(
@@ -143,8 +143,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
 val client = new Client(
-  host= "https://httpbin.org",
-  userAgent="client-name-and-version"
+  host = "https://httpbin.org",
+  userAgent = "client-name-and-version"
 )
 
 val mapper: ObjectMapper = new ObjectMapper()
@@ -152,7 +152,7 @@ mapper.registerModule(DefaultScalaModule)
 
 val resp = client.doPost(
   endpoint = "/post",
-  headers = MMap("Content-Type" -> "application/json"),
+  headers = Map("Content-Type" -> "application/json"),
   payload = mapper.writer.writeValueAsString(Map("key" -> "value"))
 )
 ```
@@ -173,11 +173,11 @@ case class Response(
                      url: Option[String]) {}
 
 val client = new Client(
-  host= "https://httpbin.org",
-  userAgent="client-name-and-version"
+  host = "https://httpbin.org",
+  userAgent = "client-name-and-version"
 )
 
-val resp = client.doGet(endpoint="/get")
+val resp = client.doGet(endpoint = "/get")
 assertTrue(resp.isOk())
 val decodedBody = resp.fromJson(classOf[Response])
 ```
@@ -191,13 +191,13 @@ val decodedBody = resp.fromJson(classOf[Response])
 
 ```scala
  val client = new Client(
-  host= "https://httpbin.org",
-  userAgent="client-name-and-version",
-  basicAuthUser="user",
+  host = "https://httpbin.org",
+  userAgent = "client-name-and-version",
+  basicAuthUser = "user",
   basicUserPassword = "pass"
 )
 
-val resp = client.doGet(endpoint="/get")
+val resp = client.doGet(endpoint = "/get")
 assertTrue(resp.isOk())
 
 ```
@@ -209,17 +209,17 @@ assertTrue(resp.isOk())
 ```scala
 
 val client = new Client(
-  host= "https://httpbin.org",
-  userAgent="client-name-and-version",
-  token="iEtTTpwwPKcLNKSykKmN"
+  host = "https://httpbin.org",
+  userAgent ="client-name-and-version",
+  token = "iEtTTpwwPKcLNKSykKmN"
 )
 
-val resp = client.doGet(endpoint="/get")
+val resp = client.doGet(endpoint = "/get")
 assertTrue(resp.isOk())
 
 // or
 
-val resp = client.doGet(endpoint="/get", headers=Map("Authorization" -> s"Bearer iEtTTpwwPKcLNKSykKmN"))
+val resp = client.doGet(endpoint = "/get", headers = Map("Authorization" -> s"Bearer iEtTTpwwPKcLNKSykKmN"))
 assertTrue(resp.isOk())
 
 ```
@@ -231,13 +231,13 @@ assertTrue(resp.isOk())
 
 ```scala
 val client = new Client(
-  host= "https://httpbin.org",
-  userAgent="client-name-and-version",
+  host = "https://httpbin.org",
+  userAgent = "client-name-and-version",
   connectionTimeout = 5,
   readTimeout = 10
 )
 
-val resp = client.doGet(endpoint="/get")
+val resp = client.doGet(endpoint = "/get")
 assertTrue(resp.isOk())
 
 ```
@@ -246,12 +246,12 @@ assertTrue(resp.isOk())
 
 all parameters are optional
 
-* `host`[String]: default is an empty string
-* `userAgent`[String]:
-* `basicAuthUser`[String]:
-* `basicUserPassword`[String]:  
-* `token`[String]: 
-* `retryCount`[Int]: default = 0
+* `host`[String]: optional, default is an empty string
+* `userAgent`[String]: optional, no default
+* `basicAuthUser`[String]: optional, no default
+* `basicUserPassword`[String]:  optional, no default
+* `token`[String]:  optional, no default
+* `retryCount`[Int]: default = 0, number of retries before request fails
 * `retryOnStatusCodes`[Set[Int]]: default is an empty set
 * `retryOnExceptions`[Set[String]]: default is an empty set
 * `retryDelay`[Int]: default = 0
@@ -263,12 +263,12 @@ all parameters are optional
 import org.vspaz.http.Client
 
 val client = new Client(
-  host= "https://httpbin.org",
-  userAgent="client-name-and-version",
-  basicAuthUser="username",
-  basicUserPassword="pass",
-  token="",
-  retryCount=3,
+  host = "https://httpbin.org",
+  userAgent = "client-name-and-version",
+  basicAuthUser = "username",
+  basicUserPassword = "pass",
+  token = "",
+  retryCount = 3,
   retryDelay = 1,
   retryOnStatusCodes = Set(400, 500, 503),
   retryOnExceptions = Set(
@@ -285,7 +285,7 @@ val client = new Client(
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
 import org.vspaz.http.Client
 
-val resp = new Client().doGet(endpoint="https://httpbin.org/get")
+val resp = new Client().doGet(endpoint = "https://httpbin.org/get")
 assertTrue(resp.isOk())
 assertTrue(resp.isSuccess())
 assertEquals(200, resp.statusCode)
