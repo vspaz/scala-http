@@ -3,10 +3,10 @@ ThisBuild / version := "0.2.0-SNAPSHOT"
 ThisBuild / scalaVersion := "2.13.10"
 
 val scalaDependencies = Seq(
-  "com.softwaremill.sttp.client3" %% "core" % "3.8.11",
-  "org.apache.logging.log4j" % "log4j-api" % "2.19.0",
-  "org.apache.logging.log4j" % "log4j-core" % "2.19.0",
-  "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.19.0",
+  "com.softwaremill.sttp.client3" %% "core" % "3.8.13",
+  "org.apache.logging.log4j" % "log4j-api" % "2.20.0",
+  "org.apache.logging.log4j" % "log4j-core" % "2.20.0",
+  "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.20.0",
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.14.2",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.2",
 
