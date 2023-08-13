@@ -1,6 +1,6 @@
 ThisBuild / organization := "org.vspaz"
 ThisBuild / version := "0.2.0-SNAPSHOT"
-ThisBuild / scalaVersion := "2.13.10"
+ThisBuild / scalaVersion := "3.2.1"
 
 val scalaDependencies = Seq(
   "com.softwaremill.sttp.client3" %% "core" % "3.8.13",
