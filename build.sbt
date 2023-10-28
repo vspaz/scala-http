@@ -3,16 +3,16 @@ ThisBuild / version := "0.2.0-SNAPSHOT"
 ThisBuild / scalaVersion := "3.2.1"
 
 val scalaDependencies = Seq(
-  "com.softwaremill.sttp.client3" %% "core" % "3.8.13",
-  "org.apache.logging.log4j" % "log4j-api" % "2.20.0",
-  "org.apache.logging.log4j" % "log4j-core" % "2.20.0",
-  "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.20.0",
-  "com.fasterxml.jackson.core" % "jackson-databind" % "2.14.2",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.2",
+  "com.softwaremill.sttp.client3" %% "core" % "3.8.16",
+  "org.apache.logging.log4j" % "log4j-api" % "2.21.1",
+  "org.apache.logging.log4j" % "log4j-core" % "2.21.1",
+  "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.21.1",
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.15.1",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.3",
 
   // Test dependencies
-  "org.scalatest" %% "scalatest" % "3.2.15" % Test,
-  "org.junit.jupiter" % "junit-jupiter-api" % "5.9.2",
+  "org.scalatest" %% "scalatest" % "3.2.17" % Test,
+  "org.junit.jupiter" % "junit-jupiter-api" % "5.10.0",
   "com.novocode" % "junit-interface" % "0.11"
 )
 
