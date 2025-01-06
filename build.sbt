@@ -1,6 +1,6 @@
 ThisBuild / organization := "org.vspaz"
 ThisBuild / version := "0.2.0-SNAPSHOT"
-ThisBuild / scalaVersion := "3.6.2"
+ThisBuild / scalaVersion := "2.13.15"
 
 val scalaDependencies = Seq(
   "com.softwaremill.sttp.client3" %% "core" % "3.10.2",
@@ -13,7 +13,7 @@ val scalaDependencies = Seq(
   // Test dependencies
   "org.scalatest" %% "scalatest" % "3.2.19" % Test,
   "org.junit.jupiter" % "junit-jupiter-api" % "5.11.4",
-  "com.novocode" % "junit-interface" % "0.11"
+  "com.github.sbt" % "junit-interface" % "0.13.3" % Test
 )
 
 libraryDependencies ++= scalaDependencies
