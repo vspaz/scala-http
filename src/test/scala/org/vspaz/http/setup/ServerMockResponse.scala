@@ -9,8 +9,6 @@ import sttp.client3.testing.SttpBackendStub
 import sttp.client3.{Identity, Response, StringBody}
 import sttp.model.{Header, MediaType, Method, StatusCode}
 
-import scala.collection.immutable.Seq
-
 trait ServerMockResponse {
   var retryCount: Int = 0
 

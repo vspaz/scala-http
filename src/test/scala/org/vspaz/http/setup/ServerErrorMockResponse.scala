@@ -6,7 +6,6 @@ import sttp.client3.testing.SttpBackendStub
 import sttp.client3.{Identity, Response, SttpClientException, UriContext, basicRequest}
 import sttp.model.StatusCode
 
-
 trait ServerErrorMockResponse {
   var retryCount: Int = 0
   var retryCountOnHttpError: Int = 0

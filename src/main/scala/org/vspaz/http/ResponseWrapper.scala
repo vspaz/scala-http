@@ -6,32 +6,25 @@ import sttp.client3.Response
 
 import scala.collection.mutable
 
-
-
 class ResponseWrapper(response: Response[String]) {
 
   val deserializer: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
 
   def headers: mutable.Map[String, String] = {
     var headerToValues = scala.collection.mutable.Map[String, String]()
-    for (header <- response.headers) {
+    for (header <- response.headers)
       if (!headerToValues.contains(header.name))
         headerToValues(header.name) = header.value
       else {
         val existingHeaderValue = headerToValues(header.name)
         headerToValues(header.name) = s"$existingHeaderValue;${header.value}"
       }
-    }
     headerToValues
   }
 
-  def isClientError(): Boolean = {
-    response.isClientError
-  }
+  def isClientError(): Boolean = response.isClientError
 
-  def isServerError(): Boolean = {
-    response.isServerError
-  }
+  def isServerError(): Boolean = response.isServerError
 
   def isOk(): Boolean = response.is200
 
