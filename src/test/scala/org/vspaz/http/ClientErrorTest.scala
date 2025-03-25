@@ -1,83 +1,84 @@
 package org.vspaz.http
 
-import java.lang.System.currentTimeMillis
-import org.scalatest.funsuite.AnyFunSuite
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
+import org.scalatest.funsuite.AnyFunSuite
 import org.vspaz.http.setup.ServerErrorMockResponse
 
+import java.lang.System.currentTimeMillis
+
 class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
-    test("Client.DoGetConnectionTimeoutFail") {
-      val testHttpBackend = getTestHttpBackendStub
-      val client =
-        new Client(
-          host = "http://mock.api",
-          userAgent = "test-exception-client",
-          retryDelay = 0,
-          retryCount = 0,
-          backend = Option(testHttpBackend)
-        )
-      try client.doGet(endpoint = "/connect-exception")
-      catch {
-        case e: RuntimeException =>
-          assertTrue(true)
-          assertEquals(e.getMessage, "failed to complete request")
-        case _: Throwable => new AssertionError
-      }
+  test("Client.DoGetConnectionTimeoutFail") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        userAgent = "test-exception-client",
+        retryDelay = 0,
+        retryCount = 0,
+        backend = Option(testHttpBackend)
+      )
+    try client.doGet(endpoint = "/connect-exception")
+    catch {
+      case e: RuntimeException =>
+        assertTrue(true)
+        assertEquals(e.getMessage, "failed to complete request")
+      case _: Throwable => new AssertionError
     }
-    test("Client.DoGetReadTimeoutFail") {
-      val testHttpBackend = getTestHttpBackendStub
-      val client =
-        new Client(
-          host = "http://mock.api",
-          userAgent = "test-exception-client",
-          retryDelay = 0,
-          retryCount = 0,
-          backend = Option(testHttpBackend)
-        )
-      try client.doGet(endpoint = "/read-exception")
-      catch {
-        case e: RuntimeException =>
-          assertTrue(true)
-          assertEquals(e.getMessage, "failed to complete request")
-        case _: Throwable => new AssertionError
-      }
+  }
+  test("Client.DoGetReadTimeoutFail") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        userAgent = "test-exception-client",
+        retryDelay = 0,
+        retryCount = 0,
+        backend = Option(testHttpBackend)
+      )
+    try client.doGet(endpoint = "/read-exception")
+    catch {
+      case e: RuntimeException =>
+        assertTrue(true)
+        assertEquals(e.getMessage, "failed to complete request")
+      case _: Throwable => new AssertionError
     }
-    test("Client.DoGetTimeoutException") {
-      val testHttpBackend = getTestHttpBackendStub
-      val client =
-        new Client(
-          host = "http://mock.api",
-          userAgent = "test-exception-client",
-          retryDelay = 0,
-          retryCount = 0,
-          backend = Option(testHttpBackend)
-        )
-      try client.doGet(endpoint = "/timeout-exception")
-      catch {
-        case e: RuntimeException =>
-          assertTrue(true)
-          assertEquals(e.getMessage, "failed to complete request")
-        case _: Throwable => new AssertionError
-      }
+  }
+  test("Client.DoGetTimeoutException") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        userAgent = "test-exception-client",
+        retryDelay = 0,
+        retryCount = 0,
+        backend = Option(testHttpBackend)
+      )
+    try client.doGet(endpoint = "/timeout-exception")
+    catch {
+      case e: RuntimeException =>
+        assertTrue(true)
+        assertEquals(e.getMessage, "failed to complete request")
+      case _: Throwable => new AssertionError
     }
-    test("Client.DoGetRetryRequestOk") {
-      val testHttpBackend = getTestHttpBackendStub
-      val client =
-        new Client(
-          host = "http://mock.api",
-          retryOnExceptions = Set("sttp.client3.SttpClientException.ReadException"),
-          userAgent = "test-retry-client",
-          retryDelay = 1,
-          backend = Option(testHttpBackend)
-        )
-      val start = currentTimeMillis()
-      val resp = client.doGet(endpoint = "/retry-request")
-      val requestTime = (currentTimeMillis() - start) / 1000
-      assert(requestTime >= 1 && requestTime <= 2)
-      assertTrue(resp.isSuccess())
-      assertEquals("retry count: '2'", resp.toString())
-    }
-    test("Client.DoGetRetryRequestOnHttpErrorOk") {
+  }
+  test("Client.DoGetRetryRequestOk") {
+    val testHttpBackend = getTestHttpBackendStub
+    val client =
+      new Client(
+        host = "http://mock.api",
+        retryOnExceptions = Set("sttp.client3.SttpClientException.ReadException"),
+        userAgent = "test-retry-client",
+        retryDelay = 1,
+        backend = Option(testHttpBackend)
+      )
+    val start = currentTimeMillis()
+    val resp = client.doGet(endpoint = "/retry-request")
+    val requestTime = (currentTimeMillis() - start) / 1000
+    assert(requestTime >= 1 && requestTime <= 2)
+    assertTrue(resp.isSuccess())
+    assertEquals("retry count: '2'", resp.toString())
+  }
+  test("Client.DoGetRetryRequestOnHttpErrorOk") {
     val testHttpBackend = getTestHttpBackendStub
     val client =
       new Client(
@@ -93,7 +94,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
     assertTrue(resp.isSuccess())
     assertEquals("retry count: '3'", resp.toString())
   }
-    test("Client.DoGetRetryRequestOnExceptionsErrorOk") {
+  test("Client.DoGetRetryRequestOnExceptionsErrorOk") {
     val testHttpBackend = getTestHttpBackendStub
     val client =
       new Client(
@@ -105,7 +106,7 @@ class ClientErrorTest extends AnyFunSuite with ServerErrorMockResponse {
           "sttp.client3.SttpClientException.ReadException",
           "sttp.client3.SttpClientException.TimeoutException",
           "java.lang.RuntimeException",
-          "java.lang.Throwable",
+          "java.lang.Throwable"
         ),
         backend = Option(testHttpBackend)
       )

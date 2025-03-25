@@ -1,13 +1,13 @@
 package org.vspaz.http
 
-import scala.concurrent.duration.{Duration, SECONDS}
-import sttp.client3.{Identity, _}
-import sttp.model.Method
-import org.slf4j.{Logger, LoggerFactory}
-
-import System.currentTimeMillis
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import org.slf4j.{Logger, LoggerFactory}
+import sttp.client3.{Identity, _}
+import sttp.model.Method
+
+import java.lang.System.currentTimeMillis
+import scala.concurrent.duration.{Duration, SECONDS}
 
 class Client(
   host: String = "",

@@ -2,10 +2,10 @@ package org.vspaz.http
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import org.scalatest.funsuite.AnyFunSuite
-import sttp.model.MediaType
 import org.junit.jupiter.api.Assertions.{assertEquals, assertTrue}
+import org.scalatest.funsuite.AnyFunSuite
 import org.vspaz.http.setup.ServerMockResponse
+import sttp.model.MediaType
 
 class ClientTest extends AnyFunSuite with ServerMockResponse {
 
